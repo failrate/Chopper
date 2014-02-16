@@ -1,0 +1,18 @@
+Loader Specification
+
+File format: TBD
+
+- Model Data Structure
+	- Mesh data
+		- Vertex list
+		- Index list
+	- Texture data
+		- U/V coordinates
+		- Bitmap
+- Parser
+	- Read in the file
+		- Determine if additional files need to be loaded
+			- Texture files
+			- ?
+	- Convert file into Model Data Structure
+	
