@@ -38,6 +38,7 @@
     <Compile Include="Mesh.cs" />
     <Compile Include="MeshLoader.cs" />
     <Compile Include="Test.cs" />
+    <Compile Include="Vector3.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
