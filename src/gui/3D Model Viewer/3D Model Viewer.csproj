@@ -50,19 +50,37 @@
     <Compile Include="fAbout.Designer.cs">
       <DependentUpon>fAbout.cs</DependentUpon>
     </Compile>
+    <Compile Include="fConsole.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="fConsole.Designer.cs">
+      <DependentUpon>fConsole.cs</DependentUpon>
+    </Compile>
     <Compile Include="fMain.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="fMain.Designer.cs">
       <DependentUpon>fMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="fObjectWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="fObjectWindow.Designer.cs">
+      <DependentUpon>fObjectWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="fAbout.resx">
       <DependentUpon>fAbout.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="fConsole.resx">
+      <DependentUpon>fConsole.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="fMain.resx">
       <DependentUpon>fMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="fObjectWindow.resx">
+      <DependentUpon>fObjectWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
