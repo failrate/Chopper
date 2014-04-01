@@ -10,8 +10,14 @@ using System.Windows.Forms;
 
 namespace _3D_Model_Viewer
 {
+
     public partial class fMain : Form
     {
+        private fConsole mformConsole;               // used to display information to use what is occruing 
+        private fObjectWindow mformViewer;           // used to display and hold the 3D Object
+        private const int miStartX = 100;
+        private const int miStartY = 100;
+
         public fMain()
         {
             InitializeComponent();
@@ -20,15 +26,19 @@ namespace _3D_Model_Viewer
         private void editToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
+            // set the initial directory of the ope file dialog
             this.openFileDialog1.InitialDirectory = "c:\\";
+            // default to show all files
             this.openFileDialog1.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
             this.openFileDialog1.FilterIndex = 2;
             this.openFileDialog1.RestoreDirectory = true;
 
+            // check to see if the user has clicked the OK box
             if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
+                    // for now let the user now which file was selected
                     string sFilename;
                     sFilename = openFileDialog1.FileName;
 
@@ -48,7 +58,8 @@ namespace _3D_Model_Viewer
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-                this.closeForm();
+            // close the form
+            this.closeForm();
         }
 
         private void closeForm()
@@ -57,27 +68,30 @@ namespace _3D_Model_Viewer
             this.Close();
         }
 
-        private void btnA_Click(object sender, EventArgs e)
-        {
-            // update the status label
-            this.toolStripStatusLabel1.Text = "Button A pressed";
-        }
-
-        private void btnB_Click(object sender, EventArgs e)
-        {
-            // update the status label
-            this.toolStripStatusLabel1.Text = "Button B pressed";
-        }
-
         private void fMain_Load(object sender, EventArgs e)
         {
+            // initialize the child forms
+            this.mformConsole = new fConsole();
+            this.mformViewer = new fObjectWindow();
 
+            // set the starting location based on the top left had corner of the Main window
+            this.Location = new Point(miStartX, miStartY);
+            this.mformConsole.Location = new Point(miStartX, miStartY + this.Size.Height);
+            this.mformViewer.Location = new Point(miStartX + this.Size.Width, miStartY);
+            
+            // show the child forms
+            this.mformViewer.Show();
+            this.mformConsole.Show();
+
+            this.mformConsole.setExtForms(this, this.mformViewer);
+            this.mformViewer.setExtForms(this, this.mformConsole);
         }
 
         private void fMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             DialogResult dResult;
 
+            // ask the user if they want to close th program
             dResult = MessageBox.Show("Exit the program?", "Exit", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (dResult == DialogResult.Yes)
@@ -86,6 +100,7 @@ namespace _3D_Model_Viewer
             }
             else
             {
+                // stop the form from closing
                 e.Cancel = true;
             }
         }
@@ -97,6 +112,22 @@ namespace _3D_Model_Viewer
             formAbout.ShowDialog();
 
             formAbout.Dispose();
+        }
+
+        public void setTextBox(string sText)
+        {
+            this.textBox1.Text = sText;
+        }
+
+        public void testConnection(string sText)
+        {
+            this.mformViewer.setTextBox(sText);
+            this.mformConsole.setTextBox(sText);
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            testConnection(this.textBox1.Text);
         }
     }
 }
