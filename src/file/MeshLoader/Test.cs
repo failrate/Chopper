@@ -10,13 +10,13 @@ namespace MeshLoader
     {
         public static void Main(string[] args)
         {
+
             // instantiate a MeshLoader
-            MeshParser mp = new MeshParser();
-            string[] data = mp.loadObjFile(args[0]);
-            // load the test file into a mesh data structure
-            ChopperMesh mesh = mp.parseObjFile(data);
-            Console.ReadKey();
+            MeshLoader ml = new MeshLoader();
+            ChopperMesh mesh = ml.loadMeshFromFile(args[0]);
             // \todo: validate that the test mesh data structure matches the expected value
+            
+            Console.ReadKey(); // pause
         }
     }
 }
