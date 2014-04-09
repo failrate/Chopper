@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+//using System.Threading.Tasks;
 using OpenTK;
 
 namespace MeshLoader
 {
     
-    class MeshParser
+    public class MeshParser
     {
         // state holders
         string currentMaterialName = "";
@@ -28,7 +28,14 @@ namespace MeshLoader
         }
         public Vector3 parseVector3(string[] tokens)
         {
-            return new Vector3((float)(Convert.ToDouble(tokens[1])),(float)(Convert.ToDouble(tokens[2])),(float)(Convert.ToDouble(tokens[3])));
+			float x = (float)(Convert.ToDouble(tokens[1]));
+			float y = (float)(Convert.ToDouble(tokens[2]));
+			float z = 0.0f;
+			if (tokens.Length > 3) // In the case of UV coordinates, the third element is optional
+			{
+				z = (float)(Convert.ToDouble(tokens[3]));
+			}
+            return new Vector3(x, y, z);
         }
         public bool parseBool(string[] tokens)
         {
@@ -42,12 +49,12 @@ namespace MeshLoader
                     return false;
             }
         }
-        public List<List<uint>> parseFaceIndices(string[] tokens)
+        public List<List<int>> parseFaceIndices(string[] tokens)
         {
-            List<List<uint>> indices = new List<List<uint>>();
+            List<List<int>> indices = new List<List<int>>();
             for (int index = 0; index < 3; index++)
             {
-                indices.Add(new List<uint>());
+                indices.Add(new List<int>());
             }
             int count = 0;
             bool first = true;
@@ -61,7 +68,7 @@ namespace MeshLoader
                 string[] subTokens = token.Split('/');
                 foreach (string subToken in subTokens)
                 {
-                    indices[count].Add(Convert.ToUInt32(subToken));
+                    indices[count].Add(Convert.ToInt32(subToken));
                     count++;
                 }
                 count = 0;
@@ -101,7 +108,7 @@ namespace MeshLoader
                         currentSmoothing = parseBool(tokens);
                         break;
                     case "f":
-                        List<List<uint>> indices = parseFaceIndices(tokens);
+                        List<List<int>> indices = parseFaceIndices(tokens);
                         currentObject.addFace(indices[0], indices[1], indices[2], currentSmoothing, currentMaterialName);
                         break;
                     case "g":

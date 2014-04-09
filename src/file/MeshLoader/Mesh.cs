@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using OpenTK;
 namespace MeshLoader
 {
-    class ChopperFace
+    public class ChopperFace
     {
         public bool useSmoothing = false;
         public string materialName = "";
-        public List<uint> vertexIndices;
-        public List<uint> textureIndices;
-        public List<uint> normalIndices;
+        public List<int> vertexIndices;
+        public List<int> textureIndices;
+        public List<int> normalIndices;
     }
-    class ChopperObject
+	public class ChopperObject
     {
         public string name = "";
         public List<ChopperFace> faces;
@@ -38,7 +38,7 @@ namespace MeshLoader
         {
             normalCoordinates.Add(coord);
         }
-        public void addFace(List<uint> vertexIndices, List<uint> textureIndices, List<uint> normalIndices, bool useSmoothing, string materialName)
+        public void addFace(List<int> vertexIndices, List<int> textureIndices, List<int> normalIndices, bool useSmoothing, string materialName)
         {
             ChopperFace face = new ChopperFace();
             face.vertexIndices = vertexIndices;
@@ -48,12 +48,45 @@ namespace MeshLoader
             face.materialName = materialName;
             faces.Add(face);
         }
-
+		public List<int> facesAsTriangles()
+		{
+			List<int> triangles = new List<int>();
+			foreach (ChopperFace face in faces)
+			{
+				triangles.Add(face.vertexIndices[0] - 1);
+				triangles.Add(face.vertexIndices[1] - 1);
+				triangles.Add(face.vertexIndices[2] - 1);
+				if (face.vertexIndices.Count > 3)
+				{
+					triangles.Add(face.vertexIndices[2] - 1);
+					triangles.Add(face.vertexIndices[3] - 1);
+					triangles.Add(face.vertexIndices[0] - 1);
+				}
+			}
+			return triangles;
+		}
+		public List<Vector2> uvs()
+		{
+			List<Vector2> uvs = new List<Vector2>();
+			foreach(ChopperFace face in faces)
+			{
+				uvs.Add(new Vector2(textureCoordinates[face.textureIndices[0] - 1][0], textureCoordinates[face.textureIndices[0] - 1][1]));
+				uvs.Add(new Vector2(textureCoordinates[face.textureIndices[1] - 1][0], textureCoordinates[face.textureIndices[1] - 1][1]));
+				uvs.Add(new Vector2(textureCoordinates[face.textureIndices[2] - 1][0], textureCoordinates[face.textureIndices[2] - 1][1]));
+				uvs.Add(new Vector2(textureCoordinates[face.textureIndices[2] - 1][0], textureCoordinates[face.textureIndices[2] - 1][1]));
+				if (face.textureIndices.Count > 3)
+				{
+					uvs.Add(new Vector2(textureCoordinates[face.textureIndices[3] - 1][0], textureCoordinates[face.textureIndices[3] - 1][1]));
+					uvs.Add(new Vector2(textureCoordinates[face.textureIndices[0] - 1][0], textureCoordinates[face.textureIndices[0] - 1][1]));
+				}
+			}
+			return uvs;
+		}
     }
-    class ChopperMesh
+	public class ChopperMesh
     {
-        List<ChopperObject> objects;
-        List<string> materialLibraries; // \todo? Parse actual material files?
+        public List<ChopperObject> objects;
+        public List<string> materialLibraries; // \todo? Parse actual material files?
         public ChopperMesh()
         {
             objects = new List<ChopperObject>();
