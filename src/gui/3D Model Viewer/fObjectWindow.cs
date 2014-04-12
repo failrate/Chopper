@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+// custom MeshLoader
+using MeshLoader;
 
 namespace _3D_Model_Viewer
 {
@@ -14,6 +16,9 @@ namespace _3D_Model_Viewer
     {
         private fMain mformMain;
         private fConsole mformConsole;
+        private MeshLoader.MeshLoader mcMeshloader;
+        private ChopperMesh mcMesh;
+        private string msFileName;
 
         public fObjectWindow()
         {
@@ -36,6 +41,22 @@ namespace _3D_Model_Viewer
         public void setTextBox(string sText)
         {
             this.textBox1.Text = sText;
+        }
+
+        public void openObjFile(string sFileName)
+        {
+            // check that the file exists
+            if(System.IO.File.Exists(sFileName))
+            {
+                // instantiate a MeshLoader
+                this.mcMeshloader = new MeshLoader.MeshLoader();
+                this.mcMesh = this.mcMeshloader.loadMeshFromFile(sFileName);
+            }
+            else
+            {
+                // unable to find the file 
+                MessageBox.Show("Unable to open the file " + sFileName, "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
