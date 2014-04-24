@@ -14,9 +14,14 @@ namespace MeshLoader
         string currentMaterialName = "";
         bool currentSmoothing = false;
         ChopperObject currentObject = null;
+        ChopperMesh currentMesh = null;
         public string parseName(string[] tokens)
         {
-            return tokens[1];
+            if (tokens.Length > 1)
+            {
+                return tokens[1];
+            }
+            return "default";
         }
         public string parseMaterialLibrary(string[] tokens)
         {
@@ -75,30 +80,47 @@ namespace MeshLoader
             }
             return indices;
         }
+
+        public void ensureCurrentObject()
+        {
+            if (currentObject == null)
+            {
+                currentObject = currentMesh.addObject("default");
+            }
+        }
+
         public ChopperMesh parseObjFile(string[] lines)
         {
-            ChopperMesh mesh = new ChopperMesh();
+            currentMesh = new ChopperMesh();
+            char[] splits = {' '};
             foreach (string line in lines)
             {
-                string[] tokens = line.Split();
+                if (line.Length == 0)
+                {
+                    continue;
+                }
+                string[] tokens = line.Split(splits, StringSplitOptions.RemoveEmptyEntries);
                 string type = tokens[0];
                 switch (type)
                 {
                     case "#": // comment; ignored
                         break;
                     case "mtllib":
-                        mesh.addMaterialLibrary(parseMaterialLibrary(tokens));
+                        currentMesh.addMaterialLibrary(parseMaterialLibrary(tokens));
                         break;
                     case "o":
-                        currentObject = mesh.addObject(parseName(tokens));
+                        currentObject = currentMesh.addObject(parseName(tokens));
                         break;
                     case "v":
+                        ensureCurrentObject(); // The object declaration is optional
                         currentObject.addVertex(parseVector3(tokens));
                         break;
                     case "vt":
+                        ensureCurrentObject();  // The object declaration is optional
                         currentObject.addTextureCoordinate(parseVector3(tokens));
                         break;
                     case "vn":
+                        ensureCurrentObject();  // The object declaration is optional
                         currentObject.addNormalCoordinate(parseVector3(tokens));
                         break;
                     case "usemtl":
@@ -108,18 +130,20 @@ namespace MeshLoader
                         currentSmoothing = parseBool(tokens);
                         break;
                     case "f":
+                        ensureCurrentObject(); // The object declaration is optional
                         List<List<int>> indices = parseFaceIndices(tokens);
                         currentObject.addFace(indices[0], indices[1], indices[2], currentSmoothing, currentMaterialName);
                         break;
                     case "g":
-                        // \todo: find out how to use groups;
+                        ensureCurrentObject();  // The object declaration is optional
+                        currentObject.addGroup(parseName(tokens));
                         break;
                     default:
                         System.Console.WriteLine("Unsupported type (" + type + ") in statement: " + line);
                         break;
                 }
             }
-            return mesh;
+            return currentMesh;
         }
 
         public string[] loadObjFile(string filename)
