@@ -39,10 +39,11 @@ namespace _3D_Model_Viewer
                 try
                 {
                     // for now let the user now which file was selected
-                    string sFilename;
-                    sFilename = openFileDialog1.FileName;
+                    string sFileName;
+                    sFileName = openFileDialog1.FileName;
 
-                    MessageBox.Show("The file selected is " + sFilename, "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    // open the file in the model window
+                    this.mformViewer.openObjFile(sFileName);
                 }
                 catch (Exception ex)
                 {
