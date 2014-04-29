@@ -182,7 +182,6 @@ $RECYCLE.BIN/
 # Mac crap
 .DS_Store
 
-
 #############
 ## Python
 #############
@@ -213,3 +212,11 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+# Chopper Project Stuff
+DerivedData/
+*.xcodeproj/project.xcworkspace/
+src/OBJModelViewer.xcodeproj/project.xcworkspace/
+src/OBJModelViewer.xcodeproj/project.xcworkspace/xcshareddata/OBJModelViewer.xccheckout
+src/OBJModelViewer.xcodeproj/project.xcworkspace/xcuserdata/tprevite.xcuserdatad/UserInterfaceState.xcuserstate
+
