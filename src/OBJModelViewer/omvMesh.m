@@ -8,6 +8,33 @@
 
 #import "omvMesh.h"
 
+@implementation Vector2 : NSObject
+
+@synthesize cfX, cfY;
+
+-(id)initWithValues: (float)x YValue: (float)y
+{
+    cfX = x;
+    cfY = y;
+    return self;
+}
+
+@end
+
+@implementation Vector3 : NSObject
+
+@synthesize cfX, cfY, cfZ;
+
+-(id)initWithValues: (float)x YValue: (float)y ZValue: (float)z
+{
+    cfX = x;
+    cfY = y;
+    cfZ = z;
+    return self;
+}
+
+@end
+
 @implementation omvFace
 
 @synthesize cbUseSmoothing, csMaterialName, caryintVertexIndices, caryintTextureIndices, caryintNormalIndices;
@@ -43,19 +70,19 @@
 }
 
 //
--(void)addVertex: (NSMutableArray*)aryv3Coord
+-(void)addVertex: (Vector3*)aryv3Coord
 {
     // add vertex vector 3
     [self.caryv3Vertices addObject:aryv3Coord];
 }
 
--(void)addTextureCoord: (NSMutableArray*)aryv3Coord
+-(void)addTextureCoord: (Vector3*)aryv3Coord
 {
     // add texture vector 3
     [self.caryv3TextureCoord addObject:aryv3Coord];
 }
 
--(void)addNormalCoord: (NSMutableArray*)aryv3Coord
+-(void)addNormalCoord: (Vector3*)aryv3Coord
 {
     // add normal vector 3
     [self.caryv3NormalCoord addObject:aryv3Coord];
@@ -141,65 +168,54 @@
 -(NSMutableArray*)getUVS
 {
     NSMutableArray *aryv2UVS = [[NSMutableArray alloc] init];
-    int iTemp;
-    NSMutableArray *aryTriangles = [[NSMutableArray alloc] init];
+    /*
+    Vector2 *v2Textures;
     omvFace *faceTemp;    // pointer to omvFace object
     NSNumber *iNum;
     
     for(int i=0; i<self.caryOmvFaces.count; i++)
     {
         faceTemp = [self.caryOmvFaces objectAtIndex:i];
+        v2Textures = [[Vector2 alloc] initWithValues:0.0f YValue:0.0f];
         
-        // index 0
-        iTemp = [[faceTemp.caryintTextureIndices objectAtIndex:0]intValue];
-        iTemp--;
-        iNum =[NSNumber numberWithInt:iTemp];
-        // add the object to the triangle
-        [aryTriangles addObject:iNum];
         
-        // index 1
-        iTemp = [[faceTemp.caryintVertexIndices objectAtIndex:1]intValue];
-        iTemp--;
-        iNum =[NSNumber numberWithInt:iTemp];
-        // add the object to the triangle
-        [aryTriangles addObject:iNum];
         
-        // index 2
-        iTemp = [[faceTemp.caryintVertexIndices objectAtIndex:2]intValue];
-        iTemp--;
-        iNum =[NSNumber numberWithInt:iTemp];
-        // add the object to the triangle
-        [aryTriangles addObject:iNum];
-        
-        if(faceTemp.caryintVertexIndices.count > 3)
-        {
-            // index 2
-            iTemp = [[faceTemp.caryintVertexIndices objectAtIndex:2]intValue];
-            iTemp--;
-            iNum =[NSNumber numberWithInt:iTemp];
-            // add the object to the triangle
-            [aryTriangles addObject:iNum];
-            
-            // index 3
-            iTemp = [[faceTemp.caryintVertexIndices objectAtIndex:3]intValue];
-            iTemp--;
-            iNum =[NSNumber numberWithInt:iTemp];
-            // add the object to the triangle
-            [aryTriangles addObject:iNum];
-            
-            // index 0
-            iTemp = [[faceTemp.caryintVertexIndices objectAtIndex:0]intValue];
-            iTemp--;
-            iNum =[NSNumber numberWithInt:iTemp];
-            // add the object to the triangle
-            [aryTriangles addObject:iNum];
-        }
-    }
+        [aryv2UVS addObject:v2Textures];
+    }*/
     
     return aryv2UVS;
 }
 @end
 
 @implementation omvMesh
+
+@synthesize caryObjects, carystrMaterialLibraries;
+
+-(id)init
+{
+    // allocate memory for the objects
+    self.caryObjects = [[NSMutableArray alloc] init];
+    self.carystrMaterialLibraries = [[NSMutableArray alloc] init];
+    
+    return self;
+}
+
+-(omvObject*)addObject: (NSString*)name
+{
+    omvObject *objReturn;
+    
+    // set the name of the object
+    objReturn.csName = name;
+    
+    // add the object to the array
+    [self.caryObjects addObject:objReturn];
+    
+    return objReturn;
+}
+
+-(void)addMaterialLibrary: (NSString*)name
+{
+    [self.carystrMaterialLibraries addObject:name];
+}
 
 @end

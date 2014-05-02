@@ -8,6 +8,25 @@
 
 #import <Foundation/Foundation.h>
 
+@interface Vector2 : NSObject
+
+@property float cfX;
+@property float cfY;
+
+-(id)initWithValues: (float)x YValue: (float)y;
+
+@end
+
+@interface Vector3 : NSObject
+
+@property float cfX;
+@property float cfY;
+@property float cfZ;
+
+-(id)initWithValues: (float)x YValue: (float)y ZValue: (float)z;
+
+@end
+
 @interface omvFace : NSObject
 
 @property BOOL cbUseSmoothing;
@@ -15,6 +34,8 @@
 @property NSMutableArray *caryintVertexIndices;
 @property NSMutableArray *caryintTextureIndices;
 @property NSMutableArray *caryintNormalIndices;
+
+-(id)init;   // Constructor
 
 @end
 
@@ -27,9 +48,9 @@
 @property NSMutableArray *caryv3NormalCoord;
 
 -(id)init;   // Constructor
--(void)addVertex: (NSMutableArray*)aryv3Coord;
--(void)addTextureCoord: (NSMutableArray*)aryv3Coord;
--(void)addNormalCoord: (NSMutableArray*)aryv3Coord;
+-(void)addVertex: (Vector3*)aryv3Coord;
+-(void)addTextureCoord: (Vector3*)aryv3Coord;
+-(void)addNormalCoord: (Vector3*)aryv3Coord;
 -(void)addFace: (NSMutableArray*)aryintVertexIndices Texture: (NSMutableArray*)aryintTextIndices Normal: (NSMutableArray*)aryintNormalIndices Smoothing: (BOOL)bUseSmoothing Material: (NSString*)sMaterialName;
 -(NSMutableArray*)getFacesAsTriangles;
 -(NSMutableArray*)getUVS;
@@ -38,7 +59,7 @@
 
 @interface omvMesh : NSObject
 
-@property NSMutableArray *caryOmvObjects;
+@property NSMutableArray *caryObjects;
 @property NSMutableArray *carystrMaterialLibraries;
 
 -(id)init;

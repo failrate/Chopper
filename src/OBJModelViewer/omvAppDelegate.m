@@ -7,12 +7,18 @@
 //
 
 #import "omvAppDelegate.h"
+#import "omvParser.h"
 
 @implementation omvAppDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
+    NSArray *aryFileContents;
+    
 	// Insert code here to initialize your application
+    omvParser *objParser = [[omvParser alloc] init];
+    
+    aryFileContents = [objParser loadObjFile:@"/Users/bbgirl_al/projects/Chopper/data/cube.obj"];
 }
 
 @end
