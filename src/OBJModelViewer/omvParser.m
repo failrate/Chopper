@@ -71,7 +71,41 @@
 
 -(NSMutableArray*)parseFaceIndices: (NSArray*) sTokens
 {
+    int i, j, k, iCount;
+    bool bFirst;
     NSMutableArray *aryReturn = [[NSMutableArray alloc] init];
+    NSMutableArray *aryTemp;
+    NSMutableArray *aryTemp2;
+    
+    for(i=0; i < 3; i++)
+    {
+        aryTemp = [[NSMutableArray alloc] init];
+        [aryReturn addObject:aryTemp];
+    }
+    
+    iCount = 0;
+    bFirst = true;
+    
+    for(j=0; j<sTokens.count; j++)
+    {
+        if(bFirst)
+        {
+            bFirst = false;
+            continue;
+        }
+        
+        NSString *sTemp =[sTokens objectAtIndex:j];
+        NSArray *arySubTokens = [sTemp componentsSeparatedByString:@"/"];
+        
+        for(k=0; k<arySubTokens.count; k++)
+        {
+            aryTemp2 = [aryReturn objectAtIndex:iCount];
+            [aryTemp2 addObject:[arySubTokens objectAtIndex:k]];
+            iCount++;
+        }
+        
+        iCount = 0;
+    }
     
     return aryReturn;
 }
@@ -95,6 +129,7 @@
     // loop through each line in the array and parse the string
     for(i=0; i<arysLines.count; i++)
     {
+        
         // get the line at index i
         sLine = [arysLines objectAtIndex:i];
         
@@ -165,15 +200,15 @@
             NSLog(@"f");
             NSMutableArray *aryIndices = [self parseFaceIndices:arysLineItems];
             
-            //[self.cobjCurrentObj addFace:[aryIndices objectAtIndex:0] Texture:[aryIndices objectAtIndex:1] Normal:[aryIndices objectAtIndex:2] Smoothing:self.cbCurrentSmoothing Material:self.csCurrentMaterialName];
+            [self.cobjCurrentObj addFace:[aryIndices objectAtIndex:0] Texture:[aryIndices objectAtIndex:1] Normal:[aryIndices objectAtIndex:2] Smoothing:self.cbCurrentSmoothing Material:self.csCurrentMaterialName];
             
             continue;
         }
         else if([sItem1 isEqualToString:@"g"])
         {
-            [self ensureCurrentObject];
+            //[self ensureCurrentObject];
             NSLog(@"g");
-            [cobjCurrentObj addGroup:[arysLineItems objectAtIndex:1]];
+            //[cobjCurrentObj addGroup:[arysLineItems objectAtIndex:1]];
             continue;
         }
         else

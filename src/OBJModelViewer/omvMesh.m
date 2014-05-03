@@ -79,7 +79,7 @@
     self.csName = @"";
     self.caryv3Vertices = [[NSMutableArray alloc] init];
     self.caryGroups = [[NSMutableArray alloc] init];
-    self.cobjGroupCurrent = NULL;
+    self.cobjGroupCurrent = [[omvGroup alloc] init];
     
     return self;
 }
@@ -181,7 +181,6 @@
             }
         }
     }
-    
     
     return aryTriangles;
 }
