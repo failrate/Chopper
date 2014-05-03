@@ -53,18 +53,33 @@
 
 @end
 
+@implementation omvGroup
+
+@synthesize csName, caryFaces, caryv3TextCoord, caryv3NormalIndices;
+
+-(id)init;
+{
+    self.csName = @"";
+    self.caryFaces = [[NSMutableArray alloc] init];
+    self.caryv3TextCoord = [[NSMutableArray alloc] init];
+    self.caryv3NormalIndices = [[NSMutableArray alloc] init];
+    
+    return self;
+}
+
+@end
+
 @implementation omvObject
 
-@synthesize csName, caryv3Vertices, caryOmvFaces, caryv3NormalCoord, caryv3TextureCoord;
+@synthesize csName, caryv3Vertices, caryGroups, cobjGroupCurrent;
 
 // Constructor
 -(id)init
 {
     self.csName = @"";
-    self.caryOmvFaces = [[NSMutableArray alloc] init];
     self.caryv3Vertices = [[NSMutableArray alloc] init];
-    self.caryv3NormalCoord = [[NSMutableArray alloc] init];
-    self.caryv3TextureCoord = [[NSMutableArray alloc] init];
+    self.caryGroups = [[NSMutableArray alloc] init];
+    self.cobjGroupCurrent = NULL;
     
     return self;
 }
@@ -79,13 +94,13 @@
 -(void)addTextureCoord: (Vector3*)aryv3Coord
 {
     // add texture vector 3
-    [self.caryv3TextureCoord addObject:aryv3Coord];
+    [self.cobjGroupCurrent.caryv3TextCoord addObject:aryv3Coord];
 }
 
 -(void)addNormalCoord: (Vector3*)aryv3Coord
 {
     // add normal vector 3
-    [self.caryv3NormalCoord addObject:aryv3Coord];
+    [self.cobjGroupCurrent.caryv3NormalIndices addObject:aryv3Coord];
 }
 
 -(void)addFace: (NSMutableArray*)aryintVertexIndices Texture: (NSMutableArray*)aryintTextIndices Normal: (NSMutableArray*)aryintNormalIndices Smoothing: (BOOL)bUseSmoothing Material: (NSString*)sMaterialName
@@ -101,57 +116,24 @@
     cFace.csMaterialName = sMaterialName;
     
     // add the face to the face array
-    [self.caryOmvFaces addObject:cFace];
+    [self.cobjGroupCurrent.caryFaces addObject:cFace];
 }
 
 -(NSMutableArray*)getFacesAsTriangles
 {
-    int iTemp;
+    int iTemp, i, j;
     NSMutableArray *aryTriangles = [[NSMutableArray alloc] init];
     omvFace *faceTemp;    // pointer to omvFace object
     NSNumber *iNum;
+    omvGroup *grpTemp;
     
-    
-    for(int i=0; i<self.caryOmvFaces.count; i++)
+    for(j=0; j<self.caryGroups.count; j++)
     {
-        faceTemp = [self.caryOmvFaces objectAtIndex:i];
+        grpTemp = [self.caryGroups objectAtIndex:j];
         
-        // index 0
-        iTemp = [[faceTemp.caryintVertexIndices objectAtIndex:0]intValue];
-        iTemp--;
-        iNum =[NSNumber numberWithInt:iTemp];
-        // add the object to the triangle
-        [aryTriangles addObject:iNum];
-        
-        // index 1
-        iTemp = [[faceTemp.caryintVertexIndices objectAtIndex:1]intValue];
-        iTemp--;
-        iNum =[NSNumber numberWithInt:iTemp];
-        // add the object to the triangle
-        [aryTriangles addObject:iNum];
-        
-        // index 2
-        iTemp = [[faceTemp.caryintVertexIndices objectAtIndex:2]intValue];
-        iTemp--;
-        iNum =[NSNumber numberWithInt:iTemp];
-        // add the object to the triangle
-        [aryTriangles addObject:iNum];
-        
-        if(faceTemp.caryintVertexIndices.count > 3)
+        for(i=0; i<grpTemp.caryFaces.count; i++)
         {
-            // index 2
-            iTemp = [[faceTemp.caryintVertexIndices objectAtIndex:2]intValue];
-            iTemp--;
-            iNum =[NSNumber numberWithInt:iTemp];
-            // add the object to the triangle
-            [aryTriangles addObject:iNum];
-            
-            // index 3
-            iTemp = [[faceTemp.caryintVertexIndices objectAtIndex:3]intValue];
-            iTemp--;
-            iNum =[NSNumber numberWithInt:iTemp];
-            // add the object to the triangle
-            [aryTriangles addObject:iNum];
+            faceTemp = [grpTemp.caryFaces objectAtIndex:i];
             
             // index 0
             iTemp = [[faceTemp.caryintVertexIndices objectAtIndex:0]intValue];
@@ -159,8 +141,47 @@
             iNum =[NSNumber numberWithInt:iTemp];
             // add the object to the triangle
             [aryTriangles addObject:iNum];
+            
+            // index 1
+            iTemp = [[faceTemp.caryintVertexIndices objectAtIndex:1]intValue];
+            iTemp--;
+            iNum =[NSNumber numberWithInt:iTemp];
+            // add the object to the triangle
+            [aryTriangles addObject:iNum];
+            
+            // index 2
+            iTemp = [[faceTemp.caryintVertexIndices objectAtIndex:2]intValue];
+            iTemp--;
+            iNum =[NSNumber numberWithInt:iTemp];
+            // add the object to the triangle
+            [aryTriangles addObject:iNum];
+            
+            if(faceTemp.caryintVertexIndices.count > 3)
+            {
+                // index 2
+                iTemp = [[faceTemp.caryintVertexIndices objectAtIndex:2]intValue];
+                iTemp--;
+                iNum =[NSNumber numberWithInt:iTemp];
+                // add the object to the triangle
+                [aryTriangles addObject:iNum];
+                
+                // index 3
+                iTemp = [[faceTemp.caryintVertexIndices objectAtIndex:3]intValue];
+                iTemp--;
+                iNum =[NSNumber numberWithInt:iTemp];
+                // add the object to the triangle
+                [aryTriangles addObject:iNum];
+                
+                // index 0
+                iTemp = [[faceTemp.caryintVertexIndices objectAtIndex:0]intValue];
+                iTemp--;
+                iNum =[NSNumber numberWithInt:iTemp];
+                // add the object to the triangle
+                [aryTriangles addObject:iNum];
+            }
         }
     }
+    
     
     return aryTriangles;
 }
@@ -185,6 +206,15 @@
     
     return aryv2UVS;
 }
+
+-(void)addGroup: (NSString*)sName
+{
+    omvGroup *objGroup = [[omvGroup alloc] init];
+    objGroup.csName = sName;
+    [self.caryGroups addObject:objGroup];
+    self.cobjGroupCurrent = objGroup;
+    
+}
 @end
 
 @implementation omvMesh
@@ -202,7 +232,7 @@
 
 -(omvObject*)addObject: (NSString*)name
 {
-    omvObject *objReturn;
+    omvObject *objReturn = [[omvObject alloc] init];
     
     // set the name of the object
     objReturn.csName = name;

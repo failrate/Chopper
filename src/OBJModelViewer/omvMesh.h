@@ -39,13 +39,23 @@
 
 @end
 
+@interface omvGroup : NSObject
+
+@property NSString *csName;
+@property NSMutableArray *caryFaces;
+@property NSMutableArray *caryv3TextCoord;
+@property NSMutableArray *caryv3NormalIndices;
+
+-(id)init;
+
+@end
+
 @interface omvObject : NSObject
 
 @property NSString *csName;
-@property NSMutableArray *caryOmvFaces;
+@property NSMutableArray *caryGroups;
 @property NSMutableArray *caryv3Vertices;
-@property NSMutableArray *caryv3TextureCoord;
-@property NSMutableArray *caryv3NormalCoord;
+@property omvGroup *cobjGroupCurrent;
 
 -(id)init;   // Constructor
 -(void)addVertex: (Vector3*)aryv3Coord;
@@ -54,6 +64,7 @@
 -(void)addFace: (NSMutableArray*)aryintVertexIndices Texture: (NSMutableArray*)aryintTextIndices Normal: (NSMutableArray*)aryintNormalIndices Smoothing: (BOOL)bUseSmoothing Material: (NSString*)sMaterialName;
 -(NSMutableArray*)getFacesAsTriangles;
 -(NSMutableArray*)getUVS;
+-(void)addGroup: (NSString*) sName;
 
 @end
 

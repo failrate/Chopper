@@ -14,6 +14,7 @@
 @property NSString  *csCurrentMaterialName;
 @property bool       cbCurrentSmoothing;
 @property omvObject *cobjCurrentObj;
+@property omvMesh   *cobjMesh;
 
 -(id)init;
 -(NSString*)parseName:              (NSMutableArray*) sTokens;
@@ -22,6 +23,7 @@
 -(Vector3*)parseVector3:            (NSArray*) sTokens;
 -(bool)parseBool:                   (NSArray*) sTokens;
 -(NSMutableArray*)parseFaceIndices: (NSArray*) sTokens;
+-(void)ensureCurrentObject;
 -(omvMesh*)parseObjFile:            (NSArray*) arysLines;
 -(NSArray*)loadObjFile:             (NSString*) sFileName;
 

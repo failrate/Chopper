@@ -10,7 +10,7 @@
 
 @implementation omvParser
 
-@synthesize csCurrentMaterialName, cbCurrentSmoothing, cobjCurrentObj;
+@synthesize csCurrentMaterialName, cbCurrentSmoothing, cobjCurrentObj, cobjMesh;
 
 // the constructor
 -(id)init
@@ -19,6 +19,7 @@
     self.csCurrentMaterialName = @"";
     self.cbCurrentSmoothing = false;
     self.cobjCurrentObj = NULL;
+    self.cobjMesh = NULL;
     
     return self;
 }
@@ -43,28 +44,49 @@
 }
 -(Vector3*)parseVector3: (NSArray*) sTokens
 {
-    Vector3 *v3Return;
+    Vector3 *v3Return = [[Vector3 alloc] init];
+    
+    v3Return.cfX = [[sTokens objectAtIndex:1] floatValue];
+    v3Return.cfY = [[sTokens objectAtIndex:2] floatValue];
+    
+    // in the case of uv coordinates the third element is optional
+    if(sTokens.count > 3)
+        v3Return.cfZ = [[sTokens objectAtIndex:3] floatValue];
+    else
+        v3Return.cfZ = 0.0f;
     
     return v3Return;
 }
 
 -(bool)parseBool: (NSArray*) sTokens
 {
-    bool bReturn;
+    NSString *sValue = [sTokens objectAtIndex:1];
     
-    return bReturn;
+    // determine what the boolean value should be based on the english string
+    if([sValue isEqualToString:@"yes"] || [sValue isEqualToString:@"on"] || [sValue isEqualToString:@"1"])
+        return true;
+    else
+        return false;
 }
 
 -(NSMutableArray*)parseFaceIndices: (NSArray*) sTokens
 {
-    NSMutableArray *aryReturn;
+    NSMutableArray *aryReturn = [[NSMutableArray alloc] init];
     
     return aryReturn;
 }
 
+-(void)ensureCurrentObject
+{
+    if(cobjCurrentObj == nil)
+    {
+        self.cobjCurrentObj = [self.cobjMesh addObject:@"default"];
+    }
+}
+
 -(omvMesh*)parseObjFile:(NSArray*) arysLines
 {
-    omvMesh *objMesh;
+    self.cobjMesh = [[omvMesh alloc] init];
     int i;
     NSString *sLine;
     NSArray  *arysLineItems;
@@ -86,57 +108,72 @@
         if([sItem1 isEqualToString:@"#"])
         {
             // do nothing this is a comment
+            NSLog(@"#");
             continue;
         }
         else if([sItem1 isEqualToString:@"mtllib"])
         {
-            [objMesh addMaterialLibrary:[arysLines objectAtIndex:1]];
+            NSLog(@"mtlib");
+            [self.cobjMesh addMaterialLibrary:[arysLineItems objectAtIndex:1]];
             continue;
         }
         else if([sItem1 isEqualToString:@"o"])
         {
-            self.cobjCurrentObj = [objMesh addObject:[arysLines objectAtIndex:1]];
-            
+            NSLog(@"o");
+            self.cobjCurrentObj = [self.cobjMesh addObject:[arysLineItems objectAtIndex:1]];
             continue;
         }
         else if([sItem1 isEqualToString:@"v"])
         {
+            [self ensureCurrentObject];
+            NSLog(@"v");
             [self.cobjCurrentObj addVertex:[self parseVector3:arysLineItems]];
             
             continue;
         }
         else if([sItem1 isEqualToString:@"vt"])
         {
+            [self ensureCurrentObject];
+            NSLog(@"vt");
             [self.cobjCurrentObj addTextureCoord:[self parseVector3:arysLineItems]];
             
             continue;
         }
         else if([sItem1 isEqualToString:@"vn"])
         {
-            [self.cobjCurrentObj addNormalCoord:[self parseVector3:arysLineItems]];
+            [self ensureCurrentObject];
+            NSLog(@"vn");
+            [cobjCurrentObj addNormalCoord:[self parseVector3:arysLineItems]];
             
             continue;
         }
         else if([sItem1 isEqualToString:@"usemtl"])
         {
-            self.csCurrentMaterialName = [self parseName:[arysLineItems objectAtIndex:1]];
+            NSLog(@"usemtl");
+            csCurrentMaterialName = [self parseName:[arysLineItems objectAtIndex:1]];
             continue;
         }
         else if([sItem1 isEqualToString:@"s"])
         {
-            self.cbCurrentSmoothing = [self parseBool:arysLineItems];
+            NSLog(@"s");
+            cbCurrentSmoothing = [self parseBool:arysLineItems];
             continue;
         }
         else if([sItem1 isEqualToString:@"f"])
         {
+            [self ensureCurrentObject];
+            NSLog(@"f");
             NSMutableArray *aryIndices = [self parseFaceIndices:arysLineItems];
             
-            [self.cobjCurrentObj addFace:[aryIndices objectAtIndex:0] Texture:[aryIndices objectAtIndex:1] Normal:[aryIndices objectAtIndex:2] Smoothing:self.cbCurrentSmoothing Material:self.csCurrentMaterialName];
+            //[self.cobjCurrentObj addFace:[aryIndices objectAtIndex:0] Texture:[aryIndices objectAtIndex:1] Normal:[aryIndices objectAtIndex:2] Smoothing:self.cbCurrentSmoothing Material:self.csCurrentMaterialName];
             
             continue;
         }
         else if([sItem1 isEqualToString:@"g"])
         {
+            [self ensureCurrentObject];
+            NSLog(@"g");
+            [cobjCurrentObj addGroup:[arysLineItems objectAtIndex:1]];
             continue;
         }
         else
@@ -146,7 +183,7 @@
         }
     }
     
-    return objMesh;
+    return cobjMesh;
 }
 
 -(NSArray*)loadObjFile:(NSString*) sFileName
