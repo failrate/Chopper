@@ -19,6 +19,8 @@
 		1197277A190ED291004B3E13 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 11972778190ED291004B3E13 /* InfoPlist.strings */; };
 		1197277C190ED291004B3E13 /* OBJModelViewerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1197277B190ED291004B3E13 /* OBJModelViewerTests.m */; };
 		11972787190ED2E7004B3E13 /* chopperOpenGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 11972786190ED2E7004B3E13 /* chopperOpenGLView.m */; };
+		F69BA5011914270D00F57AA2 /* omvParser.m in Sources */ = {isa = PBXBuildFile; fileRef = F69BA5001914270D00F57AA2 /* omvParser.m */; };
+		F6FC8CE11913424200874700 /* omvMesh.m in Sources */ = {isa = PBXBuildFile; fileRef = F6FC8CE01913424200874700 /* omvMesh.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +56,10 @@
 		11972785190ED2E7004B3E13 /* chopperOpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = chopperOpenGLView.h; sourceTree = "<group>"; };
 		11972786190ED2E7004B3E13 /* chopperOpenGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = chopperOpenGLView.m; sourceTree = "<group>"; };
 		11972788190ED5BF004B3E13 /* SimpleDataTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimpleDataTypes.h; sourceTree = "<group>"; };
+		F69BA4FF1914270D00F57AA2 /* omvParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = omvParser.h; sourceTree = "<group>"; };
+		F69BA5001914270D00F57AA2 /* omvParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = omvParser.m; sourceTree = "<group>"; };
+		F6FC8CDF1913424200874700 /* omvMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = omvMesh.h; sourceTree = "<group>"; };
+		F6FC8CE01913424200874700 /* omvMesh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = omvMesh.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +133,10 @@
 				11972786190ED2E7004B3E13 /* chopperOpenGLView.m */,
 				11972769190ED291004B3E13 /* Images.xcassets */,
 				11972758190ED291004B3E13 /* Supporting Files */,
+				F6FC8CDF1913424200874700 /* omvMesh.h */,
+				F6FC8CE01913424200874700 /* omvMesh.m */,
+				F69BA4FF1914270D00F57AA2 /* omvParser.h */,
+				F69BA5001914270D00F57AA2 /* omvParser.m */,
 			);
 			path = OBJModelViewer;
 			sourceTree = "<group>";
@@ -262,7 +272,9 @@
 			files = (
 				1197275E190ED291004B3E13 /* main.m in Sources */,
 				11972765190ED291004B3E13 /* omvAppDelegate.m in Sources */,
+				F69BA5011914270D00F57AA2 /* omvParser.m in Sources */,
 				11972787190ED2E7004B3E13 /* chopperOpenGLView.m in Sources */,
+				F6FC8CE11913424200874700 /* omvMesh.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -395,8 +407,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "OBJModelViewer/OBJModelViewer-Prefix.pch";
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = "OBJModelViewer/OBJModelViewer-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -408,8 +420,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "OBJModelViewer/OBJModelViewer-Prefix.pch";
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = "OBJModelViewer/OBJModelViewer-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -475,6 +487,7 @@
 				11972781190ED291004B3E13 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		11972782190ED291004B3E13 /* Build configuration list for PBXNativeTarget "OBJModelViewerTests" */ = {
 			isa = XCConfigurationList;
@@ -483,6 +496,7 @@
 				11972784190ED291004B3E13 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
