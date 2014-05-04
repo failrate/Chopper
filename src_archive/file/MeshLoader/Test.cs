@@ -15,8 +15,11 @@ namespace MeshLoader
             MeshLoader ml = new MeshLoader();
             ChopperMesh mesh = ml.loadMeshFromFile(args[0]);
             // \todo: validate that the test mesh data structure matches the expected value
-            
-            Console.ReadKey(); // pause
+
+            MeshRender render = new MeshRender();
+            render.mesh = mesh;
+            render.DoStuff();
+           // Console.ReadKey(); // pause
         }
     }
 }
