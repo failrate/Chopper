@@ -174,14 +174,15 @@
 	memset(&worldRotation, 0.0f, sizeof(float)*4);
 	memset(&trackballRotation, 0.0f, sizeof(float)*4);
 	memset(&modelRotation, 0.0f, sizeof(float)*4);
-	
+	memset(&origin, 0.0f, sizeof(Vector3D));
+
 	viewportHeight = viewportWidth = 0;
 	cameraAperture = 0.0f;
 	objectSize = 10.0f;
 	dollyPanStart[0] = dollyPanStart[1] = 0;
 	dolly = pan = trackball = FALSE;
 	trackingView = nil;
-	
+
 	// Setup the render timer
 	renderTimer = [NSTimer timerWithTimeInterval:kFrameTimeInterval
 										   target:self
@@ -265,20 +266,6 @@
 	glRotatef(modelRotation[0], modelRotation[1], modelRotation[2], modelRotation[3]);
 
 }
-GLint cube_num_vertices = 8;
-
-GLfloat cube_vertices [8][3] = {
-	{1.0, 1.0, 1.0}, {1.0, -1.0, 1.0}, {-1.0, -1.0, 1.0}, {-1.0, 1.0, 1.0},
-	{1.0, 1.0, -1.0}, {1.0, -1.0, -1.0}, {-1.0, -1.0, -1.0}, {-1.0, 1.0, -1.0} };
-
-GLfloat cube_vertex_colors [8][3] = {
-	{1.0, 1.0, 1.0}, {1.0, 1.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 1.0, 1.0},
-	{1.0, 0.0, 1.0}, {1.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 1.0} };
-
-GLint num_faces = 6;
-
-short cube_faces [6][4] = {
-	{3, 2, 1, 0}, {2, 3, 7, 6}, {0, 1, 5, 4}, {3, 0, 4, 7}, {1, 2, 6, 5}, {4, 5, 6, 7} };
 
 static void drawAxes(float length, Vector3D *origin)
 {
@@ -298,31 +285,6 @@ static void drawAxes(float length, Vector3D *origin)
 	glEnd();
 	
 }
-
-static void drawCube (GLfloat fSize)
-{
-	long f, i;
-	if (1) {
-		glColor3f (1.0, 0.5, 0.0);
-		glBegin (GL_QUADS);
-		for (f = 0; f < num_faces; f++)
-			for (i = 0; i < 4; i++) {
-				glColor3f (cube_vertex_colors[cube_faces[f][i]][0], cube_vertex_colors[cube_faces[f][i]][1], cube_vertex_colors[cube_faces[f][i]][2]);
-				glVertex3f(cube_vertices[cube_faces[f][i]][0] * fSize, cube_vertices[cube_faces[f][i]][1] * fSize, cube_vertices[cube_faces[f][i]][2] * fSize);
-			}
-		glEnd ();
-	}
-	if (1) {
-		glColor3f (0.0, 0.0, 0.0);
-		for (f = 0; f < num_faces; f++) {
-			glBegin (GL_LINE_LOOP);
-			for (i = 0; i < 4; i++)
-				glVertex3f(cube_vertices[cube_faces[f][i]][0] * fSize, cube_vertices[cube_faces[f][i]][1] * fSize, cube_vertices[cube_faces[f][i]][2] * fSize);
-			glEnd ();
-		}
-	}
-}
-Vector3D origin = {0.0, 0.0, 0.0};
 
 // drawRect is the main rendering function
 - (void)drawRect:(NSRect)dirtyRect
