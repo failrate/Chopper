@@ -79,7 +79,7 @@
     self.csName = @"";
     self.caryv3Vertices = [[NSMutableArray alloc] init];
     self.caryGroups = [[NSMutableArray alloc] init];
-    self.cobjGroupCurrent = [[omvGroup alloc] init];
+    self.cobjGroupCurrent = NULL;
     
     return self;
 }
@@ -114,9 +114,17 @@
     cFace.caryintNormalIndices = aryintNormalIndices;
     cFace.cbUseSmoothing = bUseSmoothing;
     cFace.csMaterialName = sMaterialName;
-    
+    [self ensureCurrentGroup];
     // add the face to the face array
     [self.cobjGroupCurrent.caryFaces addObject:cFace];
+}
+
+-(void)ensureCurrentGroup
+{
+    if(self.cobjGroupCurrent == NULL)
+    {
+        [self addGroup:@"default"];
+    }
 }
 
 -(NSMutableArray*)getFacesAsTriangles

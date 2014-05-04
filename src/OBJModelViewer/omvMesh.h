@@ -65,6 +65,7 @@
 -(NSMutableArray*)getFacesAsTriangles;
 -(NSMutableArray*)getUVS;
 -(void)addGroup: (NSString*) sName;
+-(void)ensureCurrentGroup;
 
 @end
 

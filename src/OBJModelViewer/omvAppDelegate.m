@@ -14,6 +14,7 @@
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     NSArray *aryFileContents;
+    NSMutableArray *aryTest;
     
 	// Insert code here to initialize your application
     omvParser *objParser = [[omvParser alloc] init];
@@ -22,6 +23,11 @@
     
     omvMesh *objMesh;
     objMesh = [objParser parseObjFile:aryFileContents];
+    
+    omvObject *objTest= [objMesh.caryObjects objectAtIndex:0];
+    
+    aryTest = [objTest getFacesAsTriangles];
+    
     
     int i =0;
     i++;

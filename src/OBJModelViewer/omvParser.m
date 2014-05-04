@@ -115,6 +115,7 @@
     if(cobjCurrentObj == nil)
     {
         self.cobjCurrentObj = [self.cobjMesh addObject:@"default"];
+        
     }
 }
 
