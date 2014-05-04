@@ -19,6 +19,7 @@
 		1197277A190ED291004B3E13 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 11972778190ED291004B3E13 /* InfoPlist.strings */; };
 		1197277C190ED291004B3E13 /* OBJModelViewerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1197277B190ED291004B3E13 /* OBJModelViewerTests.m */; };
 		11972787190ED2E7004B3E13 /* chopperOpenGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 11972786190ED2E7004B3E13 /* chopperOpenGLView.m */; };
+		11D09BEA191049C000A3BE88 /* trackball.c in Sources */ = {isa = PBXBuildFile; fileRef = 11D09BE8191049C000A3BE88 /* trackball.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,8 @@
 		11972785190ED2E7004B3E13 /* chopperOpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = chopperOpenGLView.h; sourceTree = "<group>"; };
 		11972786190ED2E7004B3E13 /* chopperOpenGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = chopperOpenGLView.m; sourceTree = "<group>"; };
 		11972788190ED5BF004B3E13 /* SimpleDataTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimpleDataTypes.h; sourceTree = "<group>"; };
+		11D09BE8191049C000A3BE88 /* trackball.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = trackball.c; sourceTree = "<group>"; };
+		11D09BE9191049C000A3BE88 /* trackball.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trackball.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +122,8 @@
 		11972757190ED291004B3E13 /* OBJModelViewer */ = {
 			isa = PBXGroup;
 			children = (
+				11D09BE8191049C000A3BE88 /* trackball.c */,
+				11D09BE9191049C000A3BE88 /* trackball.h */,
 				11972788190ED5BF004B3E13 /* SimpleDataTypes.h */,
 				11972763190ED291004B3E13 /* omvAppDelegate.h */,
 				11972764190ED291004B3E13 /* omvAppDelegate.m */,
@@ -260,6 +265,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				11D09BEA191049C000A3BE88 /* trackball.c in Sources */,
 				1197275E190ED291004B3E13 /* main.m in Sources */,
 				11972765190ED291004B3E13 /* omvAppDelegate.m in Sources */,
 				11972787190ED2E7004B3E13 /* chopperOpenGLView.m in Sources */,
@@ -475,6 +481,7 @@
 				11972781190ED291004B3E13 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		11972782190ED291004B3E13 /* Build configuration list for PBXNativeTarget "OBJModelViewerTests" */ = {
 			isa = XCConfigurationList;
@@ -483,6 +490,7 @@
 				11972784190ED291004B3E13 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

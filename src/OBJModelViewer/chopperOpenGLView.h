@@ -39,9 +39,21 @@
     // Rendering mode variable
 	GLuint glGeometryType;
 	RenderMode renderMode;
+
+	// Viewport / camera
+	unsigned int viewportHeight, viewportWidth;
+	Vector3D positionVector, directionVector, upVector;
+ 	double cameraAperture;
+	double objectSize;
+	
+	// Converted from Cocoa OpenGL
+	int dollyPanStart[2];
+	float trackballRotation[4], modelRotation[4], worldRotation[4];
+	BOOL dolly, pan, trackball;
+	chopperOpenGLView *trackingView;
 	
 	// Mouse movement coordinates
-	float lastX, lastY;
+	//float lastX, lastY;
 	
     // Display flags
     BOOL showNormals;
@@ -51,5 +63,10 @@
 - (IBAction)selectRenderMode:(id)sender;
 - (IBAction)selectLightEnable:(id)sender;
 - (IBAction)selectShadeModel:(id)sender;
+
+// Camera sliding on the Z axis
+-(void)mouseDolly:(NSPoint)location;
+// Camera sliding in the X/Y plane
+- (void)mousePan:(NSPoint)location;
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "chopperOpenGLView.h"
+#include "trackball.h"
 
 @implementation chopperOpenGLView
 
@@ -96,35 +97,35 @@
     return self;
 }
 
-- (void) prepareOpenGL
+- (void)prepareOpenGL
 {
     int swapInt = 1;
 	// Sync to VBL
     [[self openGLContext] setValues:&swapInt forParameter:NSOpenGLCPSwapInterval];
 	
 	// Material
-    GLfloat mat_spec[] = {0.5, 0.5, 0.5, 1.0};
-    GLfloat mat_shine[] = {0.5};
+    //GLfloat mat_spec[] = {0.5, 0.5, 0.5, 1.0};
+    //GLfloat mat_shine[] = {0.5};
     // Position
-    GLfloat light_pos[] = {0.0, 0.0, -500.0, 0.0};
+    //GLfloat light_pos[] = {0.0, 0.0, -500.0, 0.0};
     // Color
-    GLfloat light_color[] = {1.0, 1.0, 1.0, 1.0};
+    //GLfloat light_color[] = {1.0, 1.0, 1.0, 1.0};
 	
     // Material specification commands
-    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_spec);
-    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shine);
+    //glMaterialfv(GL_FRONT, GL_SPECULAR, mat_spec);
+    //glMaterialfv(GL_FRONT, GL_SHININESS, mat_shine);
 	
     // Light specification commands
-    glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_color);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, light_color);
+    //glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
+    //glLightfv(GL_LIGHT0, GL_DIFFUSE, light_color);
+    //glLightfv(GL_LIGHT0, GL_SPECULAR, light_color);
     
     // Light enablers
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
+    //glEnable(GL_LIGHTING);
+    //glEnable(GL_LIGHT0);
 	
     // Default shading model
-    glShadeModel(GL_SMOOTH);
+    //glShadeModel(GL_SMOOTH);
 	
     // Depth Buffer Operations
     glEnable(GL_DEPTH_TEST);
@@ -132,8 +133,9 @@
 	
     // Face culling
     glFrontFace(GL_CCW);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_FRONT);
+    //glEnable(GL_CULL_FACE);
+    //glCullFace(GL_FRONT);
+    //glCullFace(GL_BACK);
 	
     // Vertex Arrays
     glEnableClientState(GL_VERTEX_ARRAY);
@@ -142,10 +144,10 @@
 	// Set clear color
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	// Reset matrices
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	//glMatrixMode(GL_PROJECTION);
+	//glLoadIdentity();
+	//glMatrixMode(GL_MODELVIEW);
+	//glLoadIdentity();
 
 	// Set camera back to default
 	[self resetCameraPosition];
@@ -154,7 +156,6 @@
 // awakeFromNib
 - (void)awakeFromNib
 {
-    lastX = lastY = 0.0;
     showNormals = NO;
     showSurfaceNormals = NO;
 
@@ -167,6 +168,19 @@
     arrayIndices	= NULL;
 	triCount = vertexCount = normalCount = tcCount = 0;
 	
+	memset(&positionVector, 0.0f, sizeof(Vector3D));
+	memset(&directionVector, 0.0f, sizeof(Vector3D));
+	memset(&upVector, 0.0f, sizeof(Vector3D));
+	memset(&worldRotation, 0.0f, sizeof(float)*4);
+	memset(&trackballRotation, 0.0f, sizeof(float)*4);
+	memset(&modelRotation, 0.0f, sizeof(float)*4);
+	
+	viewportHeight = viewportWidth = 0;
+	cameraAperture = 0.0f;
+	objectSize = 10.0f;
+	dollyPanStart[0] = dollyPanStart[1] = 0;
+	dolly = pan = trackball = FALSE;
+	trackingView = nil;
 	
 	// Setup the render timer
 	renderTimer = [NSTimer timerWithTimeInterval:kFrameTimeInterval
@@ -187,15 +201,43 @@
 // Handle updates to the projection matrix - adjusts view and camera
 - (void)updateProjection
 {
+	GLdouble ratio, radians, wd2;
+	GLdouble left, right, top, bottom, near, far;
+	
     [[self openGLContext] makeCurrentContext];
 	
-	// set projection
+	// clear projection matrix
 	glMatrixMode (GL_PROJECTION);
 	glLoadIdentity ();
 	
-	// Set up the camera here
+	near = -positionVector.z - objectSize * 0.5;
+	if (near < 0.00001)
+		near = 0.00001;
 	
-	// Update view frustum here
+	far = -positionVector.z + objectSize * 0.5;
+	if (far < 1.0)
+		far = 1.0;
+	
+	radians = 0.0174532925 * cameraAperture / 2;
+	wd2 = near * tan(radians);
+	ratio = viewportWidth / (float) viewportHeight;
+	if (ratio >= 1.0)
+	{
+		left  = -ratio * wd2;
+		right = ratio * wd2;
+		top = wd2;
+		bottom = -wd2;
+	}
+	else
+	{
+		left  = -wd2;
+		right = wd2;
+		top = wd2 / ratio;
+		bottom = -wd2 / ratio;
+	}
+	
+	// Set the view frustum for OpenGL
+	glFrustum (left, right, bottom, top, near, far);
 }
 
 // Handle updates to the modelview matrix for the object / world
@@ -206,9 +248,81 @@
 	// Reset modelview matrix
 	glMatrixMode (GL_MODELVIEW);
 	glLoadIdentity ();
+	
+	gluLookAt (positionVector.x, positionVector.y, positionVector.z,
+			   positionVector.x + directionVector.x,
+			   positionVector.y + directionVector.y,
+			   positionVector.z + directionVector.z,
+			   upVector.x, upVector.y, upVector.z);
+	
+	// FIXME: May not need the trackingView thing here
+	if ((trackingView == self) && trackballRotation[0] != 0.0f)
+		glRotatef (trackballRotation[0], trackballRotation[1], trackballRotation[2], trackballRotation[3]);
 
-	// gluLookAt( and/or gluPerspective()
+	// Apply the total rotation
+	glRotatef(worldRotation[0], worldRotation[1], worldRotation[2], worldRotation[3]);
+	// Apply model rotation
+	glRotatef(modelRotation[0], modelRotation[1], modelRotation[2], modelRotation[3]);
+
 }
+GLint cube_num_vertices = 8;
+
+GLfloat cube_vertices [8][3] = {
+	{1.0, 1.0, 1.0}, {1.0, -1.0, 1.0}, {-1.0, -1.0, 1.0}, {-1.0, 1.0, 1.0},
+	{1.0, 1.0, -1.0}, {1.0, -1.0, -1.0}, {-1.0, -1.0, -1.0}, {-1.0, 1.0, -1.0} };
+
+GLfloat cube_vertex_colors [8][3] = {
+	{1.0, 1.0, 1.0}, {1.0, 1.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 1.0, 1.0},
+	{1.0, 0.0, 1.0}, {1.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, {0.0, 0.0, 1.0} };
+
+GLint num_faces = 6;
+
+short cube_faces [6][4] = {
+	{3, 2, 1, 0}, {2, 3, 7, 6}, {0, 1, 5, 4}, {3, 0, 4, 7}, {1, 2, 6, 5}, {4, 5, 6, 7} };
+
+static void drawAxes(float length, Vector3D *origin)
+{
+	// White for X-axis
+	glBegin(GL_LINES);
+		glColor3f(1.0f, 1.0f, 1.0f);
+		glVertex3d(origin->x - length, origin->y, origin->z);
+		glVertex3d(origin->x + length, origin->y, origin->z);
+	// Yellow for Y-axis
+		glColor3f(1.0f, 0.0f, 0.0f);
+		glVertex3d(origin->x, origin->y - length, origin->z);
+		glVertex3d(origin->x, origin->y + length, origin->z);
+	// Green for the Z-axis
+		glColor3f(0.0f, 1.0f, 0.0f);
+		glVertex3d(origin->x, origin->y, origin->z - length);
+		glVertex3d(origin->x, origin->y, origin->z + length);
+	glEnd();
+	
+}
+
+static void drawCube (GLfloat fSize)
+{
+	long f, i;
+	if (1) {
+		glColor3f (1.0, 0.5, 0.0);
+		glBegin (GL_QUADS);
+		for (f = 0; f < num_faces; f++)
+			for (i = 0; i < 4; i++) {
+				glColor3f (cube_vertex_colors[cube_faces[f][i]][0], cube_vertex_colors[cube_faces[f][i]][1], cube_vertex_colors[cube_faces[f][i]][2]);
+				glVertex3f(cube_vertices[cube_faces[f][i]][0] * fSize, cube_vertices[cube_faces[f][i]][1] * fSize, cube_vertices[cube_faces[f][i]][2] * fSize);
+			}
+		glEnd ();
+	}
+	if (1) {
+		glColor3f (0.0, 0.0, 0.0);
+		for (f = 0; f < num_faces; f++) {
+			glBegin (GL_LINE_LOOP);
+			for (i = 0; i < 4; i++)
+				glVertex3f(cube_vertices[cube_faces[f][i]][0] * fSize, cube_vertices[cube_faces[f][i]][1] * fSize, cube_vertices[cube_faces[f][i]][2] * fSize);
+			glEnd ();
+		}
+	}
+}
+Vector3D origin = {0.0, 0.0, 0.0};
 
 // drawRect is the main rendering function
 - (void)drawRect:(NSRect)dirtyRect
@@ -227,10 +341,14 @@
 	//glClearColor(cc, cc, cc, 0.0);
 	glClearColor(0.2f, 0.2f, 0.2f, 0.2);
 	// SNIP: End of test code
-		
+
+	[self updateModelView];
+	
     glClearDepth(1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
+	
+	//drawCube(1.5f);
+	drawAxes(40.0, &origin);
 	glBegin(GL_TRIANGLES);
 	   glColor3f(1.0f, 0.0f, 0.0f);
 	   glVertex3d(0.0f, 1.0f, -1.0f);
@@ -270,14 +388,12 @@
 	// The bounds of that determine the bounds of the OpenGL context
 	[[self openGLContext] setView:[self superview]];
 
+	viewportWidth = rect.size.width;
+	viewportHeight = rect.size.height;
 	// Reset the viewport
-	glViewport(0, 0, (int) rect.size.width, (int) rect.size.height);
-	
-	// Clear GL's matrices
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	glViewport(0, 0, viewportWidth, viewportHeight);
+	// Update the projection matrix now
+	[self updateProjection];
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -303,90 +419,141 @@
 #pragma mark  ==== Mouse Input Section ====
 //////////////////////////////////////////////////////////////////////
 
-// mouseDragged
-- (void)mouseDragged:(NSEvent *)theEvent
+// Start up the trackball
+- (void)mouseDown:(NSEvent *)theEvent
 {
-	NSEventType mouseType;
-	NSPoint pt;
-	float dx, dy;
-	dx = dy = 0.0;
-	
-	[[self openGLContext] makeCurrentContext];
-	pt = [theEvent locationInWindow];
-	mouseType = [theEvent type];
-	
-	dx = lastX - pt.x;
-	dy = lastY - pt.y;
-	
-	// Scroll left/right & up/down on the axes
-	if([theEvent modifierFlags] & NSCommandKeyMask)
-	{
-	    glTranslatef(-dx, 0.0, 0.0);
-	    glTranslatef(0.0, dy, 0.0);
-	}
-	
-	// Zoom
-	if([theEvent modifierFlags] & NSAlternateKeyMask)
-	{
-	    glTranslatef(0.0, 0.0, dy);
-	}
-	else // Rotate around the x & y axes
-	{
-	    glRotatef(-dx, 0.0, 1.0, 0.0);
-	    glRotatef(dy, 1.0, 0.0, 0.0);
-	}
-	
-	lastX = pt.x;
-	lastY = pt.y;
-}
-
-// rightMouseDragged
-- (void)rightMouseDragged:(NSEvent *)theEvent
-{
-	NSEventType mouseType;
-	NSPoint pt;
-	float dx, dy;
-	dx = dy = 0.0;
-	
-	[[self openGLContext] makeCurrentContext];
-	pt = [theEvent locationInWindow];
-	mouseType = [theEvent type];
-	
-	dx = lastX - pt.x;
-	dy = lastY - pt.y;
-	
-	if([theEvent modifierFlags] & NSCommandKeyMask)
-	{
-	    // Zoom in or out
-	    glTranslatef(0.0, 0.0, dy);
-	}
+	//Control key forces panning, ALT key forces dolly
+    if ([theEvent modifierFlags] & NSControlKeyMask)
+		[self rightMouseDown:theEvent];
+	else if ([theEvent modifierFlags] & NSAlternateKeyMask)
+		[self otherMouseDown:theEvent];
 	else
 	{
-	    // Rotate around the y axis
-	    glRotatef((dx + dy), 0.0, 1.0, 0.0);
+		NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+		location.y = viewportHeight - location.y;
+		dolly = FALSE;
+		pan = FALSE;
+		trackball = TRUE;
+		startTrackball (location.x, location.y, 0, 0, viewportWidth, viewportHeight);
+		trackingView = self;
 	}
+}
+
+// rightMouse is the panning function
+- (void)rightMouseDown:(NSEvent *)theEvent
+{
+	NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+	location.y = viewportHeight - location.y;
+	if (trackball)
+	{
+		if (trackballRotation[0] != 0.0)
+			addToRotationTrackball (trackballRotation, worldRotation);
+		trackballRotation [0] = trackballRotation [1] = trackballRotation [2] = trackballRotation [3] = 0.0f;
+	}
+	dolly = FALSE;
+	pan = TRUE;
+	trackball = FALSE;
+	dollyPanStart[0] = location.x;
+	dollyPanStart[1] = location.y;
+	trackingView = self;
+}
+
+// Used for the dolly function
+- (void)otherMouseDown:(NSEvent *)theEvent
+{
+	NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+	location.y = viewportHeight - location.y;
+	if (trackball)
+	{
+		if (trackballRotation[0] != 0.0)
+			addToRotationTrackball (trackballRotation, worldRotation);
+		trackballRotation [0] = trackballRotation [1] = trackballRotation [2] = trackballRotation [3] = 0.0f;
+	}
+	dolly = TRUE;
+	pan = FALSE;
+	trackball = FALSE;
+	dollyPanStart[0] = location.x;
+	dollyPanStart[1] = location.y;
+	trackingView = self;
+}
+
+- (void)mouseUp:(NSEvent *)theEvent
+{
+	// mouseUps are stop events
+	if (dolly)
+		dolly = FALSE;
+	else if (pan)
+		pan = FALSE;
+	else if (trackball)
+	{
+		trackball = FALSE;
+		if (trackballRotation[0] != 0.0)
+			addToRotationTrackball (trackballRotation, worldRotation);
+		trackballRotation [0] = trackballRotation [1] = trackballRotation [2] = trackballRotation [3] = 0.0f;
+	}
+	trackingView = NULL;
+}
+
+- (void)mouseDragged:(NSEvent *)theEvent
+{
+	NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+	location.y = viewportHeight - location.y;
+	if (trackball)
+		rollToTrackball (location.x, location.y, trackballRotation);
+	else if (dolly)
+	{
+		[self mouseDolly: location];
+		[self updateProjection];
+	}
+	else if (pan)
+		[self mousePan: location];
 	
-	lastX = pt.x;
-	lastY = pt.y;
+	//[self setNeedsDisplay: YES];
 }
 
-// mouseDown
-- (void)mouseDown:(NSEvent*)theEvent
+- (void)scrollWheel:(NSEvent *)theEvent
 {
-    NSPoint loc;
-    loc = [theEvent locationInWindow];
-    lastX = loc.x;
-    lastY = loc.y;
+	float wheelDelta = [theEvent deltaX] +[theEvent deltaY] + [theEvent deltaZ];
+	
+	if (wheelDelta)
+	{
+		GLfloat deltaAperture = wheelDelta * -cameraAperture / 200.0f;
+		cameraAperture += deltaAperture;
+		// Aperture must be 0.1 <= aperture < 180.0
+		if (cameraAperture < 0.1)
+			cameraAperture = 0.1;
+		if (cameraAperture > 179.9)
+			cameraAperture = 179.9;
+		// Adjust projection matrix
+		[self updateProjection];
+		//[self setNeedsDisplay: YES];
+	}
 }
 
-// rightMouseDown
-- (void)rightMouseDown:(NSEvent*)theEvent
+-(void)mouseDolly: (NSPoint) location
 {
-    NSPoint loc;
-    loc = [theEvent locationInWindow];
-    lastX = loc.x;
-    lastY = loc.y;
+	GLfloat dollyPosition = (dollyPanStart[1] -location.y) * -positionVector.z / 300.0f;
+	positionVector.z += dollyPosition;
+	if (positionVector.z == 0.0)
+		positionVector.z = 0.0001;
+	dollyPanStart[0] = location.x;
+	dollyPanStart[1] = location.y;
 }
+
+- (void)mousePan: (NSPoint) location
+{
+	GLfloat panX = (dollyPanStart[0] - location.x) / (900.0f / -positionVector.z);
+	GLfloat panY = (dollyPanStart[1] - location.y) / (900.0f / -positionVector.z);
+	positionVector.x -= panX;
+	positionVector.y -= panY;
+	dollyPanStart[0] = location.x;
+	dollyPanStart[1] = location.y;
+}
+
+- (void)rightMouseUp:(NSEvent *)theEvent		{ [self mouseUp:theEvent]; }
+- (void)otherMouseUp:(NSEvent *)theEvent		{ [self mouseUp:theEvent]; }
+- (void)rightMouseDragged:(NSEvent *)theEvent	{ [self mouseDragged: theEvent]; }
+- (void)otherMouseDragged:(NSEvent *)theEvent	{ [self mouseDragged: theEvent]; }
 
 //////////////////////////////////////////////////////////////////////
 #pragma mark  ==== Camera / View Functions ====
@@ -394,9 +561,19 @@
 // Reset the camera position to default
 - (void)resetCameraPosition
 {
-    gluPerspective(60.0, (16.0 / 10.0), 1.0, 1000.0);
-    //gluLookAt(0.0, 0.0, 75.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-    gluLookAt(0.0, 0.0, 10.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+	cameraAperture = 40.0f;	
+	
+	positionVector.x = 0.0f;
+	positionVector.y = 0.0f;
+	positionVector.z = -10.0f;
+	
+	directionVector.x = -positionVector.x;
+	directionVector.y = -positionVector.y;
+	directionVector.z = -positionVector.z;
+	
+	upVector.x = 0.0f;
+	upVector.y = 0.1f;
+	upVector.z = 0.0f;
 }
 
 @end

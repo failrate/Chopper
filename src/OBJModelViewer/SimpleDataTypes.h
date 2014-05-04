@@ -91,15 +91,4 @@ typedef struct
     TexCoord2F	tc[3];
 } Triangle;
 
-typedef struct {
-	Vector3D viewPos; // View position
-	Vector3D viewDir; // View direction vector
-	Vector3D viewUp; // View up direction
-	Vector3D rotPoint; // Point to rotate about
-	double aperture; // pContextInfo->camera aperture
-	int viewWidth, viewHeight; // current window/screen height and width
-} viewCamera;
-
-
-
 #endif
