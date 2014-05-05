@@ -17,17 +17,13 @@
 
 @interface chopperOpenGLView : NSOpenGLView
 {
-	// Texture informatiom
-    GLbyte *textureImage;
-    GLuint textureName;
-    
 	omvMesh *theMesh;
 	
 	// Triangle and vertex lists
     //Triangle *triList; // unused
 	long triCount;
 	
-    Vertex3D *vertexList;
+    Vector3D *vertexList;
 	unsigned int vertexCount;
 	
 	unsigned int *vertexIndices;
@@ -59,9 +55,6 @@
 	chopperOpenGLView *trackingView;
 	Vector3D origin ;
 
-	// Mouse movement coordinates
-	//float lastX, lastY;
-	
     // Display flags
     BOOL showNormals;
     BOOL showSurfaceNormals;

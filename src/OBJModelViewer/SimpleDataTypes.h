@@ -18,13 +18,12 @@ typedef enum
 {
     renderWireframe	= 0,
     renderSolid,
-    renderTextured
 } RenderMode;
 
 typedef enum
 {
 	shadingFlat = 0,
-	shadingSmooth,
+	shadingSmooth
 } ShadeModel;
 
 typedef struct
@@ -36,24 +35,10 @@ typedef struct
 
 typedef struct
 {
-    float x;
-    float y;
-} Point2D;
-
-typedef struct
-{
     float r;
     float g;
     float b;
 } Color3D;
-
-typedef struct
-{
-    float r;
-    float g;
-    float b;
-    float a;
-} Color4D;
 
 typedef struct
 {
@@ -65,30 +50,5 @@ typedef struct
     double x, y, z;
 } Vector3D;
 
-typedef struct
-{
-    float		x, y, z;
-    Normal3D 	normal;
-    long		usedBy[32];
-    long		useCount;
-} Vertex3D;
-
-typedef struct
-{
-    short s, t;
-} TexCoord2S;
-
-typedef struct
-{
-    float s, t;
-} TexCoord2F;
-
-typedef struct
-{
-    long		index;
-    long		vtxIndex[3];
-    Normal3D	surfaceNormal;
-    TexCoord2F	tc[3];
-} Triangle;
 
 #endif

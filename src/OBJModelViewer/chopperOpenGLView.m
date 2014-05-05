@@ -33,11 +33,8 @@
 		case renderSolid:
 			glGeometryType = GL_TRIANGLES;
 			break;
-		case renderTextured:
-			glGeometryType = GL_TRIANGLES;
-			[self initTextureMode];
-			break;
 		default:
+			NSLog(@"Error: Illegal rendering mode specified\n");
 			break;
     }
 }
@@ -151,9 +148,8 @@
 
 	vertexArray		= NULL;
     normalArray		= NULL;
-    tcArray			= NULL;
     arrayIndices	= NULL;
-	triCount = vertexCount = normalCount = tcCount = 0;
+	triCount = vertexCount = normalCount = 0;
 	
 	memset(&positionVector, 0.0f, sizeof(Vector3D));
 	memset(&directionVector, 0.0f, sizeof(Vector3D));
@@ -359,21 +355,6 @@ static void drawMesh()
 #pragma mark  ==== App Utilities Functions ====
 //////////////////////////////////////////////////////////////////////
 
-// initTextureMode
-- (void)initTextureMode
-{
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glGenTextures(1, &textureName);
-    glBindTexture(GL_TEXTURE_2D, textureName);
-    
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 256, 256, 0, GL_RGB, GL_UNSIGNED_BYTE, textureImage);
-}
-
 - (void)generateVertexArrays:(NSMutableArray *)vertices IndexArray:(NSMutableArray*)indices
 {
 	// Convert an array of Vector3 objects into ararys of Vector3D structs (3 floats)
@@ -395,14 +376,11 @@ static void drawMesh()
 	vertexList = malloc(vertexCount * sizeof(float));
 	
 	// Now get the vertex indices for those triangles
-	for (i = 0; i < triCount; i++)
+	for (i = 0; i < vertexCount; i++)
 	{
 		
 	}
 	
-	unsigned int vertexIndices;
-	long vertexCount;
-
 }
 
 //////////////////////////////////////////////////////////////////////
