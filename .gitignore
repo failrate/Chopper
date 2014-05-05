@@ -220,3 +220,5 @@ src/OBJModelViewer.xcodeproj/project.xcworkspace/
 src/OBJModelViewer.xcodeproj/project.xcworkspace/xcshareddata/OBJModelViewer.xccheckout
 src/OBJModelViewer.xcodeproj/project.xcworkspace/xcuserdata/tprevite.xcuserdatad/UserInterfaceState.xcuserstate
 
+
+*.xcuserstate
