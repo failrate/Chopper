@@ -53,6 +53,10 @@
     // Display flags
     BOOL showNormals;
     BOOL showSurfaceNormals;
+	
+	IBOutlet NSWindow *meshControlWindow;
+	IBOutlet NSPopUpButton *buttonLightingEnable;
+	IBOutlet NSPopUpButton *buttonShadingModel;
 }
 // Interface actions for adjusting the rendering
 - (IBAction)selectRenderMode:(id)sender;

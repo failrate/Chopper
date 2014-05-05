@@ -142,7 +142,7 @@
     showNormals = NO;
     showSurfaceNormals = NO;
 
-	glGeometryType = GL_TRIANGLES;
+	glGeometryType = GL_LINE_LOOP;//GL_TRIANGLES;
 	renderMode = renderWireframe;
 
 	triCount = vertexCount = normalCount = 0;
@@ -176,6 +176,8 @@
 	[[NSRunLoop currentRunLoop] addTimer:renderTimer forMode:NSDefaultRunLoopMode];
 	// Set timer to fire during move/resize operations
 	[[NSRunLoop currentRunLoop] addTimer:renderTimer forMode:NSEventTrackingRunLoopMode];
+	
+	[meshControlWindow makeKeyAndOrderFront:self];
 	
 }
 //////////////////////////////////////////////////////////////////////
@@ -296,7 +298,7 @@ static void drawAxes(float length, Vector3D *origin)
 
 #if 1
 	glVertexPointer(3, GL_DOUBLE, 0, vertexList);
-	glDrawElements(GL_TRIANGLES, (unsigned int)triCount, GL_UNSIGNED_INT, vertexIndices);
+	glDrawElements(glGeometryType, (unsigned int)triCount, GL_UNSIGNED_INT, vertexIndices);
 #else
 	glBegin(GL_TRIANGLES);
 	   glColor3f(1.0f, 0.0f, 0.0f);
