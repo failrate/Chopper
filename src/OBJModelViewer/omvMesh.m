@@ -32,6 +32,9 @@
     cfZ = z;
     return self;
 }
+-(float)x	{ return cfX; }
+-(float)y	{ return cfY; }
+-(float)z	{ return cfZ; }
 
 @end
 

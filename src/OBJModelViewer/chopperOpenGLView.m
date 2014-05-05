@@ -129,7 +129,6 @@
     // Vertex Arrays
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_NORMAL_ARRAY);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	// Set clear color
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -146,9 +145,6 @@
 	glGeometryType = GL_TRIANGLES;
 	renderMode = renderWireframe;
 
-	vertexArray		= NULL;
-    normalArray		= NULL;
-    arrayIndices	= NULL;
 	triCount = vertexCount = normalCount = 0;
 	
 	memset(&positionVector, 0.0f, sizeof(Vector3D));
@@ -159,6 +155,10 @@
 	memset(&modelRotation, 0.0f, sizeof(float)*4);
 	memset(&origin, 0.0f, sizeof(Vector3D));
 
+	meshParser = [[omvParser alloc] init];
+	theMesh = [meshParser parseObjFile:[meshParser loadObjFile:@"cube.obj"]];
+	[self generateVertexArrays];
+	
 	viewportHeight = viewportWidth = 0;
 	cameraAperture = 0.0f;
 	objectSize = 10.0f;
@@ -168,10 +168,10 @@
 
 	// Setup the render timer
 	renderTimer = [NSTimer timerWithTimeInterval:kFrameTimeInterval
-										   target:self
-										 selector:@selector(updateDisplay:)
-										 userInfo:nil
-										  repeats:YES];
+										  target:self
+										selector:@selector(updateDisplay:)
+										userInfo:nil
+										 repeats:YES];
 	// Add timer to the main thread
 	[[NSRunLoop currentRunLoop] addTimer:renderTimer forMode:NSDefaultRunLoopMode];
 	// Set timer to fire during move/resize operations
@@ -269,11 +269,6 @@ static void drawAxes(float length, Vector3D *origin)
 	
 }
 
-static void drawMesh()
-{
-	
-}
-
 // drawRect is the main rendering function
 - (void)drawRect:(NSRect)dirtyRect
 {
@@ -297,11 +292,11 @@ static void drawMesh()
     glClearDepth(1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
-	//drawCube(1.5f);
 	drawAxes(40.0, &origin);
 
-#if 0
-	drawMesh();
+#if 1
+	glVertexPointer(3, GL_DOUBLE, 0, vertexList);
+	glDrawElements(GL_TRIANGLES, (unsigned int)triCount, GL_UNSIGNED_INT, vertexIndices);
 #else
 	glBegin(GL_TRIANGLES);
 	   glColor3f(1.0f, 0.0f, 0.0f);
@@ -355,32 +350,47 @@ static void drawMesh()
 #pragma mark  ==== App Utilities Functions ====
 //////////////////////////////////////////////////////////////////////
 
-- (void)generateVertexArrays:(NSMutableArray *)vertices IndexArray:(NSMutableArray*)indices
+- (void)generateVertexArrays
 {
 	// Convert an array of Vector3 objects into ararys of Vector3D structs (3 floats)
 	// Convert an array of NSNumbers (vertex indices) into an array of ints
-	int i  = 0;
+	int i  = 0, j = 0;
+	NSMutableArray *triArray = [NSMutableArray array];
+	NSMutableArray *vertArray = [NSMutableArray array];
 	
 	// Get the total number of triangles and vertices
 	for (i = 0; i < [[theMesh caryObjects] count]; i++)
 	{
-		triCount += [[[[theMesh caryObjects] objectAtIndex:i] getFacesAsTriangles] count];
-		vertexCount += [[[[theMesh caryObjects] objectAtIndex:i] caryv3Vertices] count];
+		[triArray addObjectsFromArray:[[[theMesh caryObjects] objectAtIndex:i] getFacesAsTriangles]];
+		[vertArray addObjectsFromArray:[[[theMesh caryObjects] objectAtIndex:i] caryv3Vertices]];
 	}
-	
-	
+
+	// Vertex index count and vertex count
+	triCount = [triArray count];
+	vertexCount = [vertArray count];
+							   
 	// Free memeory since we're building the list
 	if (vertexList)
 		free(vertexList);
-	// Allocate memory for the array
-	vertexList = malloc(vertexCount * sizeof(float));
+	// Allocate memory for the vertex array
+	vertexList = malloc(vertexCount * 3 * sizeof(double));
 	
-	// Now get the vertex indices for those triangles
-	for (i = 0; i < vertexCount; i++)
+	if (vertexIndices)
+		free(vertexIndices);
+	// Allocate memory for vertex index array
+	vertexIndices = malloc(triCount * 3 * sizeof(int));
+
+	// Copy the vertex indicies
+	for (i = 0; i < triCount; i++)
+		vertexIndices[i] = [[triArray objectAtIndex:i] intValue];
+
+	// Get the vertices themselves
+	for (j = 0; j < vertexCount; j++)
 	{
-		
+		vertexList[j].x = [(Vector3*) [vertArray objectAtIndex:j] x];
+		vertexList[j].y = [(Vector3*) [vertArray objectAtIndex:j] y];
+		vertexList[j].z = [(Vector3*) [vertArray objectAtIndex:j] z];
 	}
-	
 }
 
 //////////////////////////////////////////////////////////////////////

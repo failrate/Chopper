@@ -226,8 +226,10 @@
 {
     NSArray *aryReturn;
     NSString *sFileContents;
-    
-    sFileContents = [NSString stringWithContentsOfFile:sFileName encoding:NSASCIIStringEncoding error:NULL];
+
+	NSMutableString *filePath = [NSMutableString stringWithString:[[NSBundle mainBundle] pathForResource:[sFileName stringByDeletingPathExtension] ofType:[sFileName pathExtension]]];
+
+    sFileContents = [NSString stringWithContentsOfFile:filePath encoding:NSASCIIStringEncoding error:NULL];
     
     aryReturn = [sFileContents componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
     

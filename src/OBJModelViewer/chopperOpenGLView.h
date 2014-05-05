@@ -12,28 +12,23 @@
 #import <OpenGL/glu.h>
 #import "SimpleDataTypes.h"
 #import "omvMesh.h"
+#import "omvParser.h"
 
 #define kFrameTimeInterval	0.01666666666667
 
 @interface chopperOpenGLView : NSOpenGLView
 {
 	omvMesh *theMesh;
+	omvParser *meshParser;
 	
-	// Triangle and vertex lists
-    //Triangle *triList; // unused
 	long triCount;
+	long vertexCount;
 	
     Vector3D *vertexList;
-	unsigned int vertexCount;
-	
 	unsigned int *vertexIndices;
-	unsigned int indexCount;
-    
-	float *vertexArray;
-    float *normalArray;
-	
-    long *arrayIndices;
-	long normalCount;
+
+	float *normalArray; // unused right now
+	long normalCount;	// unused right now
 	
     // Framerate timers
     NSTimer *renderTimer;
@@ -69,6 +64,5 @@
 // Camera sliding in the X/Y plane
 - (void)mousePan:(NSPoint)location;
 
-- (void)generateVertexArrays:(NSMutableArray *)vertices IndexArray:(NSMutableArray*)indices;
-
+- (void)generateVertexArrays;
 @end

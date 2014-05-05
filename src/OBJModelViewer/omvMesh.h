@@ -24,6 +24,9 @@
 @property float cfZ;
 
 -(id)initWithValues: (float)x YValue: (float)y ZValue: (float)z;
+-(float)x;
+-(float)y;
+-(float)z;
 
 @end
 

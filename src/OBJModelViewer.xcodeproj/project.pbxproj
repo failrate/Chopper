@@ -20,6 +20,9 @@
 		1197277C190ED291004B3E13 /* OBJModelViewerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1197277B190ED291004B3E13 /* OBJModelViewerTests.m */; };
 		11972787190ED2E7004B3E13 /* chopperOpenGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 11972786190ED2E7004B3E13 /* chopperOpenGLView.m */; };
 		11D09BEA191049C000A3BE88 /* trackball.c in Sources */ = {isa = PBXBuildFile; fileRef = 11D09BE8191049C000A3BE88 /* trackball.c */; };
+		11D4A6A41918343F00880575 /* cube.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 11D4A6A11918343F00880575 /* cube.mtl */; };
+		11D4A6A51918343F00880575 /* cube.obj in Resources */ = {isa = PBXBuildFile; fileRef = 11D4A6A21918343F00880575 /* cube.obj */; };
+		11D4A6A61918343F00880575 /* obj.dot in Resources */ = {isa = PBXBuildFile; fileRef = 11D4A6A31918343F00880575 /* obj.dot */; };
 		F69BA5011914270D00F57AA2 /* omvParser.m in Sources */ = {isa = PBXBuildFile; fileRef = F69BA5001914270D00F57AA2 /* omvParser.m */; };
 		F6FC8CE11913424200874700 /* omvMesh.m in Sources */ = {isa = PBXBuildFile; fileRef = F6FC8CE01913424200874700 /* omvMesh.m */; };
 /* End PBXBuildFile section */
@@ -59,6 +62,9 @@
 		11972788190ED5BF004B3E13 /* SimpleDataTypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimpleDataTypes.h; sourceTree = "<group>"; };
 		11D09BE8191049C000A3BE88 /* trackball.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = trackball.c; sourceTree = "<group>"; };
 		11D09BE9191049C000A3BE88 /* trackball.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trackball.h; sourceTree = "<group>"; };
+		11D4A6A11918343F00880575 /* cube.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cube.mtl; sourceTree = "<group>"; };
+		11D4A6A21918343F00880575 /* cube.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cube.obj; sourceTree = "<group>"; };
+		11D4A6A31918343F00880575 /* obj.dot */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = obj.dot; sourceTree = "<group>"; };
 		F69BA4FF1914270D00F57AA2 /* omvParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = omvParser.h; sourceTree = "<group>"; };
 		F69BA5001914270D00F57AA2 /* omvParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = omvParser.m; sourceTree = "<group>"; };
 		F6FC8CDF1913424200874700 /* omvMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = omvMesh.h; sourceTree = "<group>"; };
@@ -89,6 +95,7 @@
 		11972745190ED291004B3E13 = {
 			isa = PBXGroup;
 			children = (
+				11D4A6A01918342A00880575 /* Resources */,
 				11972757190ED291004B3E13 /* OBJModelViewer */,
 				11972775190ED291004B3E13 /* OBJModelViewerTests */,
 				11972750190ED291004B3E13 /* Frameworks */,
@@ -176,6 +183,16 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		11D4A6A01918342A00880575 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				11D4A6A11918343F00880575 /* cube.mtl */,
+				11D4A6A21918343F00880575 /* cube.obj */,
+				11D4A6A31918343F00880575 /* obj.dot */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -253,9 +270,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				11D4A6A51918343F00880575 /* cube.obj in Resources */,
 				1197275C190ED291004B3E13 /* InfoPlist.strings in Resources */,
+				11D4A6A41918343F00880575 /* cube.mtl in Resources */,
 				1197276A190ED291004B3E13 /* Images.xcassets in Resources */,
 				11972762190ED291004B3E13 /* Credits.rtf in Resources */,
+				11D4A6A61918343F00880575 /* obj.dot in Resources */,
 				11972768190ED291004B3E13 /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

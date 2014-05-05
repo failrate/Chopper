@@ -1,0 +1,153 @@
+//# Blender v2.69 _sub 0 OBJ File: ''
+//# www.blender.org
+//mtllib cube.mtl
+//o Cube
+//v 1.000000 -1.000000 -1.000000
+//v 1.000000 -1.000000 1.000000
+//v -1.000000 -1.000000 1.000000
+//v -1.000000 -1.000000 -1.000000
+//v 1.000000 1.000000 -0.999999
+//v 0.999999 1.000000 1.000001
+//v -1.000000 1.000000 1.000000
+//v -1.000000 1.000000 -1.000000
+//usemtl Material
+//s off
+//f 1 2 3 4
+//f 5 8 7 6
+//f 1 5 6 2
+//f 2 6 7 3
+//f 3 7 8 4
+//f 5 1 4 8
+
+digraph f
+{
+	START -> f;
+	f -> WHITE_1;
+	WHITE_1 -> INDEX_1;
+	INDEX_1 -> WHITE_2;
+	WHITE_2 -> INDEX_2;
+	INDEX_2 -> WHITE_3;
+	WHITE_3 -> INDEX_3;
+	INDEX_3 -> WHITE_4;
+	WHITE_4 -> INDEX_4;
+	INDEX_4 -> END;
+}
+
+digraph s
+{
+	START -> s;
+	s -> WHITE;
+	WHITE -> on;
+	WHITE -> off;
+	on -> END;
+	off -> END;
+}
+
+digraph usemtl
+{
+	START -> usemtl;
+	usemtl -> WHITE;
+	WHITE -> IDENTIFIER;
+	IDENTIFIER -> END;
+}
+
+digraph v
+{
+	START -> v;
+	v -> WHITE_1;
+	WHITE_1 -> FLOAT_1;
+	FLOAT_1 -> WHITE_2;
+	WHITE_2 -> FLOAT_2;
+	FLOAT_2 -> WHITE_3;
+	WHITE_3 -> FLOAT_3;
+	FLOAT_3 -> END;
+}
+
+digraph mtllib
+{
+	START -> mtllib;
+	mtllib -> WHITE;
+	WHITE -> FILENAME;
+	FILENAME -> END;
+}
+
+digraph o
+{
+	START -> o;
+	o -> WHITE;
+	WHITE -> STRING;
+	STRING -> END;
+}
+
+digraph INDEX
+{
+	START -> NUMERAL;
+	NUMERAL -> NUMERAL;
+	NUMERAL -> END;
+}
+
+digraph FLOAT
+{
+	START -> -;
+	START -> NUMERAL_1;
+	NUMERAL_1 -> NUMERAL_1;
+	NUMERAL_1;-> DOT;
+	DOT -> NUMERAL_2;
+	NUMERAL_2 -> NUMERAL_2;
+	NUMERAL_1 -> END;
+	NUMERAL_2 -> END;
+}
+
+digraph IDENTIFIER
+{
+	START -> ALPHA;
+	ALPHA -> ALPHANUM;
+	ALPHANUM -> ALPHANUM;
+	ALPHA -> END;
+	ALPHANUM -> END;
+}
+
+digraph STRING
+{
+	START -> ALPHANUM;
+	ALPHANUM -> ALPHANUM;
+	ALPHA -> END;
+	ALPHANUM -> END;
+}
+
+digraph FILENAME
+{
+	START -> STRING;
+	STRING -> DOT;
+	DOT -> STRING;
+	STRING -> END;
+}
+
+digraph G
+{
+	START -> COMMENT;
+	ENTER -> o;
+	o -> ENTER;
+	WHITE -> STRING;
+	STRING -> ENTER;
+	ENTER -> v;
+	v -> WHITE;
+	WHITE -> FLOAT;
+	FLOAT -> WHITE;
+	FLOAT -> ENTER;
+	usemtl -> STRING;
+	s -> on;
+	s -> off;
+	f -> FLOAT;
+}
+
+digraph COMMENT
+{
+	START -> #;
+	# -> WHITE;
+	# -> STRING;
+	WHITE -> END;
+	STRING -> END;
+	WHITE -> STRING;
+	STRING -> WHITE;
+}
