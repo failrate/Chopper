@@ -164,7 +164,6 @@
 	objectSize = 10.0f;
 	dollyPanStart[0] = dollyPanStart[1] = 0;
 	dolly = pan = trackball = FALSE;
-	trackingView = nil;
 
 	// Setup the render timer
 	renderTimer = [NSTimer timerWithTimeInterval:kFrameTimeInterval
@@ -190,23 +189,26 @@
 	double ratio, radians, wd2;
 	double left, right, top, bottom, near, far;
 	
+	// Make sure our context is current
     [[self openGLContext] makeCurrentContext];
-	
-	// clear projection matrix
+	// Clear projection matrix
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	
+	// Clipping planes for the view frustum
+	// Set the near plane
 	near = -positionVector.z - objectSize * 0.5;
 	if (near < 0.00001)
 		near = 0.00001;
-	
+	// Set the far plane
 	far = -positionVector.z + objectSize * 0.5;
 	if (far < 1.0)
 		far = 1.0;
-	
+	// Cover the camera aperture to radians
 	radians = 0.0174532925 * cameraAperture / 2;
 	wd2 = near * tan(radians);
+	// Set the viewport ratio
 	ratio = viewportWidth / (float) viewportHeight;
+	// Check the ratio to maintain proper orientation and viewing
 	if (ratio >= 1.0)
 	{
 		left  = -ratio * wd2;
@@ -227,25 +229,23 @@
 }
 
 // Handle updates to the modelview matrix for the object / world
-- (void) updateModelView
+-(void) updateModelView
 {
+	// Make sure our context is current
     [[self openGLContext] makeCurrentContext];
-
 	// Reset modelview matrix
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	
+	// Use the GLU utility to point the camera at the specified point
 	gluLookAt (positionVector.x, positionVector.y, positionVector.z,
 			   positionVector.x + directionVector.x,
 			   positionVector.y + directionVector.y,
 			   positionVector.z + directionVector.z,
 			   upVector.x, upVector.y, upVector.z);
 	
-	// FIXME: May not need the trackingView thing here
-	if ((trackingView == self) && trackballRotation[0] != 0.0f)
+	if (trackballRotation[0] != 0.0f)
 		glRotatef (trackballRotation[0], trackballRotation[1], trackballRotation[2], trackballRotation[3]);
-
-	// Apply the total rotation
+	// Apply the total (world) rotation
 	glRotatef(worldRotation[0], worldRotation[1], worldRotation[2], worldRotation[3]);
 	// Apply model rotation
 	glRotatef(modelRotation[0], modelRotation[1], modelRotation[2], modelRotation[3]);
@@ -275,41 +275,21 @@ static void drawAxes(float length, Vector3D *origin)
 - (void)drawRect:(NSRect)dirtyRect
 {
     [super drawRect:dirtyRect];
-
-	// FIXME: Test code to verify render loop operation
-    static float cc = 0.01f;
-	static float inc = 0.01;
-	if (cc >= 1.0f)
-		inc = -0.01f;
-	if (cc <= 0.0f)
-		inc = 0.01f;
-	cc += inc;
-
-	//glClearColor(cc, cc, cc, 0.0);
+	// Set the clear color - not strictly necessary, but just to be safe
 	glClearColor(0.2f, 0.2f, 0.2f, 0.2);
-	// SNIP: End of test code
-
+	// Update the modeview matrix now
 	[self updateModelView];
-	
+	// Set the value for clearing (filling) the depth buffer
     glClearDepth(1.0);
+	// Clear color and depth buffers
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
+	// Draw the axes
 	drawAxes(40.0, &origin);
-
-#if 1
+	// Set our vertex pointer to the vertex array
 	glVertexPointer(3, GL_DOUBLE, 0, vertexList);
+	// Draw the vertex arrays
 	glDrawElements(glGeometryType, (unsigned int)triCount, GL_UNSIGNED_INT, vertexIndices);
-#else
-	glBegin(GL_TRIANGLES);
-	   glColor3f(1.0f, 0.0f, 0.0f);
-	   glVertex3d(0.0f, 1.0f, -1.0f);
-	   glColor3f(0.0f, 1.0f, 0.0f);
-	   glVertex3d(1.0f, 0.0f, -1.0f);
-	   glColor3f(0.0f, 0.0f, 1.0f);
-	   glVertex3d(-1.0f, 0.0f, -1.0f);
-	glEnd();
-#endif
-	
+	// Buffer swap
 	[[self openGLContext] flushBuffer];
 }
 
@@ -415,7 +395,6 @@ static void drawAxes(float length, Vector3D *origin)
 		pan = FALSE;
 		trackball = TRUE;
 		startTrackball (location.x, location.y, 0, 0, viewportWidth, viewportHeight);
-		trackingView = self;
 	}
 }
 
@@ -435,7 +414,6 @@ static void drawAxes(float length, Vector3D *origin)
 	trackball = FALSE;
 	dollyPanStart[0] = location.x;
 	dollyPanStart[1] = location.y;
-	trackingView = self;
 }
 
 // Used for the dolly function
@@ -454,7 +432,6 @@ static void drawAxes(float length, Vector3D *origin)
 	trackball = FALSE;
 	dollyPanStart[0] = location.x;
 	dollyPanStart[1] = location.y;
-	trackingView = self;
 }
 
 - (void)mouseUp:(NSEvent *)theEvent
@@ -471,7 +448,6 @@ static void drawAxes(float length, Vector3D *origin)
 			addToRotationTrackball (trackballRotation, worldRotation);
 		trackballRotation [0] = trackballRotation [1] = trackballRotation [2] = trackballRotation [3] = 0.0f;
 	}
-	trackingView = NULL;
 }
 
 - (void)mouseDragged:(NSEvent *)theEvent

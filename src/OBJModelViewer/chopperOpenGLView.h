@@ -47,7 +47,6 @@
 	int dollyPanStart[2];
 	float trackballRotation[4], modelRotation[4], worldRotation[4];
 	BOOL dolly, pan, trackball;
-	chopperOpenGLView *trackingView;
 	Vector3D origin ;
 
     // Display flags
