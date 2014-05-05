@@ -11,6 +11,7 @@
 #import <OpenGL/glext.h>
 #import <OpenGL/glu.h>
 #import "SimpleDataTypes.h"
+#import "omvMesh.h"
 
 #define kFrameTimeInterval	0.01666666666667
 
@@ -20,18 +21,23 @@
     GLbyte *textureImage;
     GLuint textureName;
     
+	omvMesh *theMesh;
+	
 	// Triangle and vertex lists
-    Triangle *triList;
+    //Triangle *triList; // unused
 	long triCount;
+	
     Vertex3D *vertexList;
-	long vertexCount;
+	unsigned int vertexCount;
+	
+	unsigned int *vertexIndices;
+	unsigned int indexCount;
     
 	float *vertexArray;
     float *normalArray;
-    float *tcArray;
+	
     long *arrayIndices;
 	long normalCount;
-	long tcCount;
 	
     // Framerate timers
     NSTimer *renderTimer;
@@ -69,5 +75,7 @@
 -(void)mouseDolly:(NSPoint)location;
 // Camera sliding in the X/Y plane
 - (void)mousePan:(NSPoint)location;
+
+- (void)generateVertexArrays:(NSMutableArray *)vertices IndexArray:(NSMutableArray*)indices;
 
 @end

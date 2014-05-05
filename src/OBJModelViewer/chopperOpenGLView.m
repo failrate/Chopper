@@ -46,7 +46,26 @@
 - (IBAction)selectLightEnable:(id)sender
 {
     long lightingEnable = [[sender selectedItem] tag];
+	// Material
+    GLfloat mat_spec[] = {0.5, 0.5, 0.5, 1.0};
+    GLfloat mat_shine[] = {0.5};
+    // Position
+    GLfloat light_pos[] = {0.0, 0.0, -500.0, 0.0};
+    // Color
+    GLfloat light_color[] = {1.0, 1.0, 1.0, 1.0};
 	
+    // Material specification commands
+    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_spec);
+    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shine);
+	
+    // Light specification commands
+    glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_color);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light_color);
+    
+	// Set camera back to default
+	[self resetCameraPosition];
+
 	if (lightingEnable)
 	{
 		glEnable(GL_LIGHT0);
@@ -103,39 +122,12 @@
 	// Sync to VBL
     [[self openGLContext] setValues:&swapInt forParameter:NSOpenGLCPSwapInterval];
 	
-	// Material
-    //GLfloat mat_spec[] = {0.5, 0.5, 0.5, 1.0};
-    //GLfloat mat_shine[] = {0.5};
-    // Position
-    //GLfloat light_pos[] = {0.0, 0.0, -500.0, 0.0};
-    // Color
-    //GLfloat light_color[] = {1.0, 1.0, 1.0, 1.0};
-	
-    // Material specification commands
-    //glMaterialfv(GL_FRONT, GL_SPECULAR, mat_spec);
-    //glMaterialfv(GL_FRONT, GL_SHININESS, mat_shine);
-	
-    // Light specification commands
-    //glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
-    //glLightfv(GL_LIGHT0, GL_DIFFUSE, light_color);
-    //glLightfv(GL_LIGHT0, GL_SPECULAR, light_color);
-    
-    // Light enablers
-    //glEnable(GL_LIGHTING);
-    //glEnable(GL_LIGHT0);
-	
-    // Default shading model
-    //glShadeModel(GL_SMOOTH);
-	
     // Depth Buffer Operations
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 	
     // Face culling
     glFrontFace(GL_CCW);
-    //glEnable(GL_CULL_FACE);
-    //glCullFace(GL_FRONT);
-    //glCullFace(GL_BACK);
 	
     // Vertex Arrays
     glEnableClientState(GL_VERTEX_ARRAY);
@@ -143,11 +135,6 @@
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	// Set clear color
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	// Reset matrices
-	//glMatrixMode(GL_PROJECTION);
-	//glLoadIdentity();
-	//glMatrixMode(GL_MODELVIEW);
-	//glLoadIdentity();
 
 	// Set camera back to default
 	[self resetCameraPosition];
@@ -202,14 +189,14 @@
 // Handle updates to the projection matrix - adjusts view and camera
 - (void)updateProjection
 {
-	GLdouble ratio, radians, wd2;
-	GLdouble left, right, top, bottom, near, far;
+	double ratio, radians, wd2;
+	double left, right, top, bottom, near, far;
 	
     [[self openGLContext] makeCurrentContext];
 	
 	// clear projection matrix
-	glMatrixMode (GL_PROJECTION);
-	glLoadIdentity ();
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
 	
 	near = -positionVector.z - objectSize * 0.5;
 	if (near < 0.00001)
@@ -238,7 +225,7 @@
 	}
 	
 	// Set the view frustum for OpenGL
-	glFrustum (left, right, bottom, top, near, far);
+	glFrustum(left, right, bottom, top, near, far);
 }
 
 // Handle updates to the modelview matrix for the object / world
@@ -247,8 +234,8 @@
     [[self openGLContext] makeCurrentContext];
 
 	// Reset modelview matrix
-	glMatrixMode (GL_MODELVIEW);
-	glLoadIdentity ();
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 	
 	gluLookAt (positionVector.x, positionVector.y, positionVector.z,
 			   positionVector.x + directionVector.x,
@@ -286,6 +273,11 @@ static void drawAxes(float length, Vector3D *origin)
 	
 }
 
+static void drawMesh()
+{
+	
+}
+
 // drawRect is the main rendering function
 - (void)drawRect:(NSRect)dirtyRect
 {
@@ -311,6 +303,10 @@ static void drawAxes(float length, Vector3D *origin)
 	
 	//drawCube(1.5f);
 	drawAxes(40.0, &origin);
+
+#if 0
+	drawMesh();
+#else
 	glBegin(GL_TRIANGLES);
 	   glColor3f(1.0f, 0.0f, 0.0f);
 	   glVertex3d(0.0f, 1.0f, -1.0f);
@@ -319,7 +315,8 @@ static void drawAxes(float length, Vector3D *origin)
 	   glColor3f(0.0f, 0.0f, 1.0f);
 	   glVertex3d(-1.0f, 0.0f, -1.0f);
 	glEnd();
-
+#endif
+	
 	[[self openGLContext] flushBuffer];
 }
 
@@ -375,6 +372,37 @@ static void drawAxes(float length, Vector3D *origin)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 256, 256, 0, GL_RGB, GL_UNSIGNED_BYTE, textureImage);
+}
+
+- (void)generateVertexArrays:(NSMutableArray *)vertices IndexArray:(NSMutableArray*)indices
+{
+	// Convert an array of Vector3 objects into ararys of Vector3D structs (3 floats)
+	// Convert an array of NSNumbers (vertex indices) into an array of ints
+	int i  = 0;
+	
+	// Get the total number of triangles and vertices
+	for (i = 0; i < [[theMesh caryObjects] count]; i++)
+	{
+		triCount += [[[[theMesh caryObjects] objectAtIndex:i] getFacesAsTriangles] count];
+		vertexCount += [[[[theMesh caryObjects] objectAtIndex:i] caryv3Vertices] count];
+	}
+	
+	
+	// Free memeory since we're building the list
+	if (vertexList)
+		free(vertexList);
+	// Allocate memory for the array
+	vertexList = malloc(vertexCount * sizeof(float));
+	
+	// Now get the vertex indices for those triangles
+	for (i = 0; i < triCount; i++)
+	{
+		
+	}
+	
+	unsigned int vertexIndices;
+	long vertexCount;
+
 }
 
 //////////////////////////////////////////////////////////////////////
