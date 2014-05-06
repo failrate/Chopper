@@ -243,7 +243,7 @@
 }
 
 // Handle updates to the modelview matrix for the object / world
--(void) updateModelView
+-(void)updateModelView
 {
 	// Make sure our context is current
     [[self openGLContext] makeCurrentContext];
@@ -251,11 +251,12 @@
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	// Use the GLU utility to point the camera at the specified point
-	gluLookAt (positionVector.x, positionVector.y, positionVector.z,
-			   positionVector.x + directionVector.x,
-			   positionVector.y + directionVector.y,
-			   positionVector.z + directionVector.z,
-			   upVector.x, upVector.y, upVector.z);
+	gluLookAt (positionVector.x, positionVector.y, positionVector.z,	// Camera position vector
+			   positionVector.x + directionVector.x,					// Point of focus (x coord)
+			   positionVector.y + directionVector.y,					// Point of focus (y coord)
+			   positionVector.z + directionVector.z,					// Point of focus (z coord)
+			   upVector.x, upVector.y, upVector.z);						// Vector indicating direction of "up"
+	
 	
 	if (trackballRotation[0] != 0.0f)
 		glRotatef (trackballRotation[0], trackballRotation[1], trackballRotation[2], trackballRotation[3]);
@@ -431,6 +432,7 @@ static void drawAxes(float length, Vector3D *origin)
 		pV1 = &vertexList[vertexIndices[i+1]];
 		pV2 = &vertexList[vertexIndices[i+2]];
 
+		// This is a point in the middle of the triangle surface
 		surfaceCoordinate.x = (pV0->x + pV1->x + pV2->x) / 3.0;
 		surfaceCoordinate.y = (pV0->y + pV1->y + pV2->y) / 3.0;
 		surfaceCoordinate.z = (pV0->z + pV1->z + pV2->z) / 3.0;
@@ -469,14 +471,17 @@ static void drawAxes(float length, Vector3D *origin)
 		
 		// Add the normal line to lines array
 		normalLineIndices[j] = j;
+		normalVectorLines[j].x = normalArray[i].x;
+		normalVectorLines[j].y = normalArray[i].y;
+		normalVectorLines[j++].z = normalArray[i].z;
+
+		normalLineIndices[j] = j;
 		normalVectorLines[j].x = surfaceCoordinate.x;
 		normalVectorLines[j].y = surfaceCoordinate.y;
 		normalVectorLines[j++].z = surfaceCoordinate.z;
 		
-		normalLineIndices[j] = j;
-		normalVectorLines[j].x = normalArray[i].x + surfaceCoordinate.x;
-		normalVectorLines[j].y = normalArray[i].y + surfaceCoordinate.y;
-		normalVectorLines[j++].z = normalArray[i].z + surfaceCoordinate.z;
+		
+		
 		normalLineCount++;
 	}
 }
@@ -569,8 +574,6 @@ static void drawAxes(float length, Vector3D *origin)
 	}
 	else if (pan)
 		[self mousePan: location];
-	
-	//[self setNeedsDisplay: YES];
 }
 
 - (void)scrollWheel:(NSEvent *)theEvent
@@ -588,7 +591,6 @@ static void drawAxes(float length, Vector3D *origin)
 			cameraAperture = 179.9;
 		// Adjust projection matrix
 		[self updateProjection];
-		//[self setNeedsDisplay: YES];
 	}
 }
 
