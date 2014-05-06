@@ -13,6 +13,7 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
+#if 0
     NSArray *aryFileContents;
     NSMutableArray *aryTest;
     
@@ -31,6 +32,7 @@
     
     int i =0;
     i++;
+#endif
 }
 
 @end

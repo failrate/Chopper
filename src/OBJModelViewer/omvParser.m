@@ -144,25 +144,25 @@
         if([sItem1 isEqualToString:@"#"])
         {
             // do nothing this is a comment
-            NSLog(@"#");
+            //NSLog(@"#");
             continue;
         }
         else if([sItem1 isEqualToString:@"mtllib"])
         {
-            NSLog(@"mtlib");
+            //NSLog(@"mtlib");
             [self.cobjMesh addMaterialLibrary:[arysLineItems objectAtIndex:1]];
             continue;
         }
         else if([sItem1 isEqualToString:@"o"])
         {
-            NSLog(@"o");
+            //NSLog(@"o");
             self.cobjCurrentObj = [self.cobjMesh addObject:[arysLineItems objectAtIndex:1]];
             continue;
         }
         else if([sItem1 isEqualToString:@"v"])
         {
             [self ensureCurrentObject];
-            NSLog(@"v");
+            //NSLog(@"v");
             [self.cobjCurrentObj addVertex:[self parseVector3:arysLineItems]];
             
             continue;
@@ -170,7 +170,7 @@
         else if([sItem1 isEqualToString:@"vt"])
         {
             [self ensureCurrentObject];
-            NSLog(@"vt");
+            //NSLog(@"vt");
             [self.cobjCurrentObj addTextureCoord:[self parseVector3:arysLineItems]];
             
             continue;
@@ -178,27 +178,27 @@
         else if([sItem1 isEqualToString:@"vn"])
         {
             [self ensureCurrentObject];
-            NSLog(@"vn");
+            //NSLog(@"vn");
             [cobjCurrentObj addNormalCoord:[self parseVector3:arysLineItems]];
             
             continue;
         }
         else if([sItem1 isEqualToString:@"usemtl"])
         {
-            NSLog(@"usemtl");
+            //NSLog(@"usemtl");
             csCurrentMaterialName = [self parseName:[arysLineItems objectAtIndex:1]];
             continue;
         }
         else if([sItem1 isEqualToString:@"s"])
         {
-            NSLog(@"s");
+            //NSLog(@"s");
             cbCurrentSmoothing = [self parseBool:arysLineItems];
             continue;
         }
         else if([sItem1 isEqualToString:@"f"])
         {
             [self ensureCurrentObject];
-            NSLog(@"f");
+            //NSLog(@"f");
             NSMutableArray *aryIndices = [self parseFaceIndices:arysLineItems];
             
             [self.cobjCurrentObj addFace:[aryIndices objectAtIndex:0] Texture:[aryIndices objectAtIndex:1] Normal:[aryIndices objectAtIndex:2] Smoothing:self.cbCurrentSmoothing Material:self.csCurrentMaterialName];
@@ -208,8 +208,9 @@
         else if([sItem1 isEqualToString:@"g"])
         {
             //[self ensureCurrentObject];
-            NSLog(@"g");
+            //NSLog(@"g");
             //[cobjCurrentObj addGroup:[arysLineItems objectAtIndex:1]];
+			NSLog(@"WARNING: Group objects not currently handled\n");
             continue;
         }
         else

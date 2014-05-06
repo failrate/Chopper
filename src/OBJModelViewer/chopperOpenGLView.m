@@ -464,6 +464,7 @@ static void drawAxes(float length, Vector3D *origin)
 			ry *= d;
 			rz *= d;
 		}
+		
 		// Assign the normalized surface normal to the triangle
 		normalArray[i].x = rx;
 		normalArray[i].y = ry;
@@ -475,14 +476,12 @@ static void drawAxes(float length, Vector3D *origin)
 		normalVectorLines[j].x = normalArray[i].x;
 		normalVectorLines[j].y = normalArray[i].y;
 		normalVectorLines[j++].z = normalArray[i].z;
-
+		
 		normalLineIndices[j] = j;
 		normalVectorLines[j].x = surfaceCoordinate.x;
 		normalVectorLines[j].y = surfaceCoordinate.y;
 		normalVectorLines[j++].z = surfaceCoordinate.z;
-		
-		
-		
+		// Track the number of normal lines generated
 		normalLineCount++;
 	}
 }
