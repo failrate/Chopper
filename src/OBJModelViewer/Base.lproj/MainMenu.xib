@@ -694,13 +694,13 @@
                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zAZ-eu-Sej">
                         <rect key="frame" x="18" y="149" width="212" height="26"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <popUpButtonCell key="cell" type="push" title="Enable GL_LIGHT0" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="fbE-u6-nYJ" id="8Fi-B1-Mxh">
+                        <popUpButtonCell key="cell" type="push" title="Disable GL_LIGHT0" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="Hnj-Gx-fuy" id="8Fi-B1-Mxh">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                             <menu key="menu" title="OtherViews" id="OCF-QU-1Oy">
                                 <items>
-                                    <menuItem title="Enable GL_LIGHT0" state="on" id="fbE-u6-nYJ"/>
-                                    <menuItem title="Disable GL_LIGHT0" id="Hnj-Gx-fuy"/>
+                                    <menuItem title="Enable GL_LIGHT0" id="fbE-u6-nYJ"/>
+                                    <menuItem title="Disable GL_LIGHT0" state="on" id="Hnj-Gx-fuy"/>
                                 </items>
                             </menu>
                         </popUpButtonCell>
@@ -722,7 +722,7 @@
                             </menu>
                         </popUpButtonCell>
                         <connections>
-                            <action selector="selectShadeModel:" target="bil-MW-DXT" id="iE7-Uy-9g7"/>
+                            <action selector="selectShadeModel:" target="bil-MW-DXT" id="elt-gY-3kZ"/>
                         </connections>
                     </popUpButton>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jJz-ox-G2W">
@@ -748,7 +748,7 @@
                             </menu>
                         </popUpButtonCell>
                         <connections>
-                            <action selector="selectShadeModel:" target="bil-MW-DXT" id="MWb-lI-e5L"/>
+                            <action selector="selectRenderMode:" target="bil-MW-DXT" id="uL1-my-Xnn"/>
                         </connections>
                     </popUpButton>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="D6v-TB-jA7">

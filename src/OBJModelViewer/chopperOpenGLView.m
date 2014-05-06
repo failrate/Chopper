@@ -23,7 +23,7 @@
 // Select the rendering mode
 - (IBAction)selectRenderMode:(id)sender
 {
-    long mode = [[sender selectedItem] tag];
+    long mode = [sender indexOfSelectedItem];
 	
     switch(mode)
     {
@@ -42,12 +42,14 @@
 // Enable or disable lighting
 - (IBAction)selectLightEnable:(id)sender
 {
-    long lightingEnable = [[sender selectedItem] tag];
+    //long lightingEnable = [[sender selectedItem] tag];
+    long lightingEnable = [sender indexOfSelectedItem];
+	
 	// Material
     GLfloat mat_spec[] = {0.5, 0.5, 0.5, 1.0};
     GLfloat mat_shine[] = {0.5};
     // Position
-    GLfloat light_pos[] = {0.0, 0.0, -500.0, 0.0};
+    GLfloat light_pos[] = {0.0, 0.0, -50.0, 0.0};
     // Color
     GLfloat light_color[] = {1.0, 1.0, 1.0, 1.0};
 	
@@ -63,22 +65,26 @@
 	// Set camera back to default
 	[self resetCameraPosition];
 
-	if (lightingEnable)
+	switch (lightingEnable)
 	{
-		glEnable(GL_LIGHT0);
-		glEnable(GL_LIGHTING);
-	}
-	else
-	{
-		glDisable(GL_LIGHT0);
-		glDisable(GL_LIGHTING);
+		case 0:
+			glEnable(GL_LIGHT0);
+			glEnable(GL_LIGHTING);
+			glEnableClientState(GL_NORMAL_ARRAY);
+			break;
+		case 1:
+			glDisable(GL_LIGHT0);
+			glDisable(GL_LIGHTING);
+			glDisableClientState(GL_NORMAL_ARRAY);
+		default:
+			break;
 	}
 }
 
 // Select the shading model
 - (IBAction)selectShadeModel:(id)sender
 {
-	ShadeModel sm = (ShadeModel) [[sender selectedItem] tag];
+	ShadeModel sm = (ShadeModel) [sender indexOfSelectedItem];
 
 	if (sm == shadingFlat)
 		glShadeModel(GL_FLAT);
@@ -128,7 +134,6 @@
 	
     // Vertex Arrays
     glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_NORMAL_ARRAY);
 	// Set clear color
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -158,6 +163,7 @@
 	meshParser = [[omvParser alloc] init];
 	theMesh = [meshParser parseObjFile:[meshParser loadObjFile:@"cube.obj"]];
 	[self generateVertexArrays];
+	[self generateSurfaceNormals];
 	
 	viewportHeight = viewportWidth = 0;
 	cameraAperture = 0.0f;
@@ -287,6 +293,8 @@ static void drawAxes(float length, Vector3D *origin)
 	drawAxes(40.0, &origin);
 	// Set our vertex pointer to the vertex array
 	glVertexPointer(3, GL_DOUBLE, 0, vertexList);
+	// Set the normal pointer as well
+	glNormalPointer(GL_DOUBLE, 0, normalArray);
 	// Draw the vertex arrays
 	glDrawElements(glGeometryType, (unsigned int)triCount, GL_UNSIGNED_INT, vertexIndices);
 	// Buffer swap
@@ -372,6 +380,55 @@ static void drawAxes(float length, Vector3D *origin)
 		vertexList[j].x = [(Vector3*) [vertArray objectAtIndex:j] x];
 		vertexList[j].y = [(Vector3*) [vertArray objectAtIndex:j] y];
 		vertexList[j].z = [(Vector3*) [vertArray objectAtIndex:j] z];
+	}
+}
+
+// Generate surface normals for the geometry
+-(void)generateSurfaceNormals
+{
+	// Generate a normal for each triangle
+	int i = 0;
+	Vector3D *pV0, *pV1, *pV2;
+	float ux, uy, uz, vx, vy, vz, rx, ry, rz, d;
+
+	normalArray = malloc(triCount * sizeof(Vector3D));
+	for (i = 0; i < triCount; i += 3)
+	{
+		// Get the vertices used by the current triangle
+		pV0 = &vertexList[vertexIndices[i+0]];
+		pV1 = &vertexList[vertexIndices[i+1]];
+		pV2 = &vertexList[vertexIndices[i+2]];
+
+		//(v1 - v2) * (v2 - v3)
+		ux = pV0->x - pV1->x;
+		uy = pV0->y - pV1->y;
+		uz = pV0->z - pV1->z;
+
+		vx = pV2->x - pV1->x;
+		vy = pV2->y - pV1->y;
+		vz = pV2->z - pV1->z;
+
+		// find cross product of these two vectors
+		rx = ((uy * vz) - (uz * vy));
+		ry = ((uz * vx) - (ux * vz));
+		rz = ((ux * vy) - (uy * vx));
+
+		// Normalize to minimize weighting the average
+		d = sqrt((rx*rx) + (ry*ry) + (rz*rz));
+
+		if(d == 0.0)
+			NSLog(@"WARNING: Triangle %d - distance is zero!", i);
+		else
+		{
+			d = 1.0/d;
+			rx *= d;
+			ry *= d;
+			rz *= d;
+		}
+		// Assign the normalized surface normal to the triangle
+		normalArray[i].x = rx;
+		normalArray[i].y = ry;
+		normalArray[i].z = rz;
 	}
 }
 

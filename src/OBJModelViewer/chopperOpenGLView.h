@@ -27,7 +27,7 @@
     Vector3D *vertexList;
 	unsigned int *vertexIndices;
 
-	float *normalArray; // unused right now
+	Vector3D *normalArray; // unused right now
 	long normalCount;	// unused right now
 	
     // Framerate timers
