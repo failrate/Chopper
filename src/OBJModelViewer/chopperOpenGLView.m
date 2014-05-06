@@ -432,10 +432,11 @@ static void drawAxes(float length, Vector3D *origin)
 		pV1 = &vertexList[vertexIndices[i+1]];
 		pV2 = &vertexList[vertexIndices[i+2]];
 
-		// This is a point in the middle of the triangle surface
-		surfaceCoordinate.x = (pV0->x + pV1->x + pV2->x) / 3.0;
-		surfaceCoordinate.y = (pV0->y + pV1->y + pV2->y) / 3.0;
-		surfaceCoordinate.z = (pV0->z + pV1->z + pV2->z) / 3.0;
+		// Centroid formula (x,y,z) = (x1 + 2/3(x2-x1), y1 + 2/3(y2 - y1), z1 + 2/3(z2-z1))
+		surfaceCoordinate.x = pV0->x + (pV1->x - pV0->x)*(2.0/3.0);
+		surfaceCoordinate.y = pV0->y + (pV1->y - pV0->y)*(2.0/3.0);
+		surfaceCoordinate.z = pV0->z + (pV1->z - pV0->z)*(2.0/3.0);
+		
 		
 		//(v1 - v2) * (v2 - v3)
 		ux = pV0->x - pV1->x;
