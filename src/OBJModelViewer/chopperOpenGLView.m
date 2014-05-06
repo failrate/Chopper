@@ -16,12 +16,12 @@
 //////////////////////////////////////////////////////////////////////
 
 // Play nice with the rest of the system
-- (BOOL)acceptsFirstResponder	{ return YES; }
-- (BOOL)becomeFirstResponder	{ return YES; }
-- (BOOL)resignFirstResponder	{ return YES; }
+-(BOOL)acceptsFirstResponder	{ return YES; }
+-(BOOL)becomeFirstResponder		{ return YES; }
+-(BOOL)resignFirstResponder		{ return YES; }
 
 // Select the rendering mode
-- (IBAction)selectRenderMode:(id)sender
+-(IBAction)selectRenderMode:(id)sender
 {
     long mode = [sender indexOfSelectedItem];
 	
@@ -40,7 +40,7 @@
 }
 
 // Enable or disable lighting
-- (IBAction)selectLightEnable:(id)sender
+-(IBAction)selectLightEnable:(id)sender
 {
     //long lightingEnable = [[sender selectedItem] tag];
     long lightingEnable = [sender indexOfSelectedItem];
@@ -82,7 +82,7 @@
 }
 
 // Select the shading model
-- (IBAction)selectShadeModel:(id)sender
+-(IBAction)selectShadeModel:(id)sender
 {
 	ShadeModel sm = (ShadeModel) [sender indexOfSelectedItem];
 
@@ -91,6 +91,14 @@
 
 	if (sm == shadingSmooth)
 		glShadeModel(GL_SMOOTH);
+}
+
+-(IBAction)selectShowSurfaceNormals:(id)sender
+{
+	if ([sender state])
+		showSurfaceNormals = TRUE;
+	else
+		showSurfaceNormals = FALSE;
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -277,6 +285,14 @@ static void drawAxes(float length, Vector3D *origin)
 	
 }
 
+- (void)drawSurfaceNormals
+{
+	glColor4f(1.0, 1.0, 0.5, 1.0);
+	glDisableClientState(GL_NORMAL_ARRAY);
+	glVertexPointer(3, GL_DOUBLE, 0, normalVectorLines);
+	glDrawElements(GL_LINES, (int)normalLineCount, GL_UNSIGNED_INT, normalLineIndices);
+}
+
 // drawRect is the main rendering function
 - (void)drawRect:(NSRect)dirtyRect
 {
@@ -296,7 +312,11 @@ static void drawAxes(float length, Vector3D *origin)
 	// Set the normal pointer as well
 	glNormalPointer(GL_DOUBLE, 0, normalArray);
 	// Draw the vertex arrays
-	glDrawElements(glGeometryType, (unsigned int)triCount, GL_UNSIGNED_INT, vertexIndices);
+	glDrawElements(glGeometryType, (int)triCount, GL_UNSIGNED_INT, vertexIndices);
+	
+	if (showSurfaceNormals)
+		[self drawSurfaceNormals];
+	
 	// Buffer swap
 	[[self openGLContext] flushBuffer];
 }
@@ -387,11 +407,23 @@ static void drawAxes(float length, Vector3D *origin)
 -(void)generateSurfaceNormals
 {
 	// Generate a normal for each triangle
-	int i = 0;
+	int i = 0, j = 0;
 	Vector3D *pV0, *pV1, *pV2;
 	float ux, uy, uz, vx, vy, vz, rx, ry, rz, d;
 
+	if (normalArray)
+		free(normalArray);
+	if (normalVectorLines)
+		free(normalVectorLines);
+	if (normalLineIndices)
+		free(normalLineIndices);
+
 	normalArray = malloc(triCount * sizeof(Vector3D));
+	normalVectorLines = malloc(2 * triCount * sizeof(Vector3D));
+	normalLineIndices  = malloc(2 * triCount * sizeof(int));
+
+	Vector3D surfaceCoordinate;
+	
 	for (i = 0; i < triCount; i += 3)
 	{
 		// Get the vertices used by the current triangle
@@ -399,6 +431,10 @@ static void drawAxes(float length, Vector3D *origin)
 		pV1 = &vertexList[vertexIndices[i+1]];
 		pV2 = &vertexList[vertexIndices[i+2]];
 
+		surfaceCoordinate.x = (pV0->x + pV1->x + pV2->x) / 3.0;
+		surfaceCoordinate.y = (pV0->y + pV1->y + pV2->y) / 3.0;
+		surfaceCoordinate.z = (pV0->z + pV1->z + pV2->z) / 3.0;
+		
 		//(v1 - v2) * (v2 - v3)
 		ux = pV0->x - pV1->x;
 		uy = pV0->y - pV1->y;
@@ -429,6 +465,19 @@ static void drawAxes(float length, Vector3D *origin)
 		normalArray[i].x = rx;
 		normalArray[i].y = ry;
 		normalArray[i].z = rz;
+		normalCount++;
+		
+		// Add the normal line to lines array
+		normalLineIndices[j] = j;
+		normalVectorLines[j].x = surfaceCoordinate.x;
+		normalVectorLines[j].y = surfaceCoordinate.y;
+		normalVectorLines[j++].z = surfaceCoordinate.z;
+		
+		normalLineIndices[j] = j;
+		normalVectorLines[j].x = normalArray[i].x + surfaceCoordinate.x;
+		normalVectorLines[j].y = normalArray[i].y + surfaceCoordinate.y;
+		normalVectorLines[j++].z = normalArray[i].z + surfaceCoordinate.z;
+		normalLineCount++;
 	}
 }
 

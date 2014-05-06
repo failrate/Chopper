@@ -23,13 +23,18 @@
 	
 	long triCount;
 	long vertexCount;
+	long normalCount;
+	long normalLineCount;
+
 	
     Vector3D *vertexList;
 	unsigned int *vertexIndices;
 
-	Vector3D *normalArray; // unused right now
-	long normalCount;	// unused right now
+	Vector3D *normalArray;
 	
+	Vector3D *normalVectorLines;
+	unsigned int *normalLineIndices;
+
     // Framerate timers
     NSTimer *renderTimer;
 

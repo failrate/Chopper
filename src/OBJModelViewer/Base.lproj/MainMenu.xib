@@ -685,14 +685,14 @@
         <window title="MeshViewer Control" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" animationBehavior="default" id="MdJ-cR-q78">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="370" y="807" width="247" height="218"/>
+            <rect key="contentRect" x="370" y="807" width="247" height="251"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1178"/>
             <view key="contentView" id="Pdq-bo-RXM">
-                <rect key="frame" x="0.0" y="0.0" width="247" height="218"/>
+                <rect key="frame" x="0.0" y="0.0" width="247" height="251"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zAZ-eu-Sej">
-                        <rect key="frame" x="18" y="149" width="212" height="26"/>
+                        <rect key="frame" x="18" y="182" width="212" height="26"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <popUpButtonCell key="cell" type="push" title="Disable GL_LIGHT0" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="Hnj-Gx-fuy" id="8Fi-B1-Mxh">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -709,7 +709,7 @@
                         </connections>
                     </popUpButton>
                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="olW-hF-CQS">
-                        <rect key="frame" x="18" y="83" width="212" height="26"/>
+                        <rect key="frame" x="18" y="116" width="212" height="26"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <popUpButtonCell key="cell" type="push" title="Flat Shading" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="xDq-5W-K5n" id="2ty-b9-GXu">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -726,7 +726,7 @@
                         </connections>
                     </popUpButton>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jJz-ox-G2W">
-                        <rect key="frame" x="18" y="115" width="211" height="17"/>
+                        <rect key="frame" x="18" y="148" width="211" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Shading Model" id="br5-bo-BuT">
                             <font key="font" metaFont="system"/>
@@ -735,7 +735,7 @@
                         </textFieldCell>
                     </textField>
                     <popUpButton verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fCQ-GK-gN2">
-                        <rect key="frame" x="18" y="17" width="212" height="26"/>
+                        <rect key="frame" x="18" y="50" width="212" height="26"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <popUpButtonCell key="cell" type="push" title="Wireframe Mode" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="LAP-sR-Yv9" id="TNE-79-CeJ">
                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
@@ -752,7 +752,7 @@
                         </connections>
                     </popUpButton>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="D6v-TB-jA7">
-                        <rect key="frame" x="18" y="49" width="211" height="17"/>
+                        <rect key="frame" x="18" y="82" width="211" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Rendering Mode" id="kht-TZ-S40">
                             <font key="font" metaFont="system"/>
@@ -761,7 +761,7 @@
                         </textFieldCell>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Ad-Pv-Vag">
-                        <rect key="frame" x="18" y="181" width="211" height="17"/>
+                        <rect key="frame" x="18" y="214" width="211" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Lighting Enable" id="wjg-BY-IWJ">
                             <font key="font" metaFont="system"/>
@@ -769,6 +769,17 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
+                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bVQ-hM-cGj">
+                        <rect key="frame" x="18" y="17" width="162" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="Show Surface Normals" bezelStyle="regularSquare" imagePosition="left" inset="2" id="A6l-Ie-C02">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="selectShowSurfaceNormals:" target="bil-MW-DXT" id="B3j-Bs-PV5"/>
+                        </connections>
+                    </button>
                 </subviews>
             </view>
         </window>
