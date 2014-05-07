@@ -142,6 +142,7 @@
 	
     // Vertex Arrays
     glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_COLOR_ARRAY);
 	// Set clear color
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -288,10 +289,15 @@ static void drawAxes(float length, Vector3D *origin)
 
 - (void)drawSurfaceNormals
 {
-	glColor4f(1.0, 1.0, 0.5, 1.0);
-	glDisableClientState(GL_NORMAL_ARRAY);
+	glColor4f(0.0, 1.0, 1.0, 1.0);
+#if 0
 	glVertexPointer(3, GL_DOUBLE, 0, normalVectorLines);
 	glDrawElements(GL_LINES, (int)normalLineCount, GL_UNSIGNED_INT, normalLineIndices);
+#else
+	int ni[] = {0,1,2,3,4,5,6,7,8,9,10,11};
+	glVertexPointer(3, GL_DOUBLE, 0, normalArray);
+	glDrawElements(GL_POINTS, (int)normalCount, GL_UNSIGNED_INT, ni);
+#endif
 }
 
 // drawRect is the main rendering function
@@ -310,6 +316,8 @@ static void drawAxes(float length, Vector3D *origin)
 	drawAxes(40.0, &origin);
 	// Set our vertex pointer to the vertex array
 	glVertexPointer(3, GL_DOUBLE, 0, vertexList);
+	// Set the color array
+	glColorPointer(3, GL_FLOAT, 0, colorList);
 	// Set the normal pointer as well
 	glNormalPointer(GL_DOUBLE, 0, normalArray);
 	// Draw the vertex arrays
@@ -368,6 +376,12 @@ static void drawAxes(float length, Vector3D *origin)
 	int i  = 0, j = 0;
 	NSMutableArray *triArray = [NSMutableArray array];
 	NSMutableArray *vertArray = [NSMutableArray array];
+
+	Color3F red = {1.0,0.0,0.0};
+	Color3F green = {0.0,1.0,0.0};
+	Color3F blue = {0.0,0.0,1.0};
+	Color3F *currentColor = &red;
+	int cc = 0;
 	
 	// Get the total number of triangles and vertices
 	for (i = 0; i < [[theMesh caryObjects] count]; i++)
@@ -391,6 +405,10 @@ static void drawAxes(float length, Vector3D *origin)
 	// Allocate memory for vertex index array
 	vertexIndices = malloc(triCount * 3 * sizeof(int));
 
+	if (colorList)
+		free(colorList);
+	colorList = malloc(vertexCount * 3 * sizeof(float));
+	
 	// Copy the vertex indicies
 	for (i = 0; i < triCount; i++)
 		vertexIndices[i] = [[triArray objectAtIndex:i] intValue];
@@ -401,6 +419,20 @@ static void drawAxes(float length, Vector3D *origin)
 		vertexList[j].x = [(Vector3*) [vertArray objectAtIndex:j] x];
 		vertexList[j].y = [(Vector3*) [vertArray objectAtIndex:j] y];
 		vertexList[j].z = [(Vector3*) [vertArray objectAtIndex:j] z];
+
+		switch (cc++ % 3)
+		{
+			case 0:
+				currentColor = &red;
+				break;
+			case 1:
+				currentColor = &green;
+				break;
+			case 2:
+				currentColor = &blue;
+				break;
+		}
+		memcpy(&colorList[j], currentColor, sizeof(Color3F));
 	}
 }
 
@@ -410,7 +442,7 @@ static void drawAxes(float length, Vector3D *origin)
 	// Generate a normal for each triangle
 	int i = 0, j = 0;
 	Vector3D *pV0, *pV1, *pV2;
-	float ux, uy, uz, vx, vy, vz, rx, ry, rz, d;
+	float ux, uy, uz, vx, vy, vz, rx, ry, rz;
 
 	if (normalArray)
 		free(normalArray);
@@ -431,40 +463,37 @@ static void drawAxes(float length, Vector3D *origin)
 		pV0 = &vertexList[vertexIndices[i+0]];
 		pV1 = &vertexList[vertexIndices[i+1]];
 		pV2 = &vertexList[vertexIndices[i+2]];
-
+		
+		NSLog(@"V0 = %d (%f : %f : %f) | V1  = %d (%f : %f : %f) | V2 = %d (%f : %f : %f)\n",
+			  vertexIndices[i+0], pV0->x, pV0->y, pV0->z,
+			  vertexIndices[i+1], pV1->x, pV1->y, pV1->z,
+			  vertexIndices[i+2], pV2->x, pV2->y, pV2->z);
+		
 		// Centroid formula (x,y,z) = (x1 + 2/3(x2-x1), y1 + 2/3(y2 - y1), z1 + 2/3(z2-z1))
-		surfaceCoordinate.x = pV0->x + (pV1->x - pV0->x)*(2.0/3.0);
-		surfaceCoordinate.y = pV0->y + (pV1->y - pV0->y)*(2.0/3.0);
-		surfaceCoordinate.z = pV0->z + (pV1->z - pV0->z)*(2.0/3.0);
+		surfaceCoordinate.x = pV0->x + (pV1->x - pV0->x)*(2.0/3.0) + (pV2->x - pV1->x)*(2.0/3.0);
+		surfaceCoordinate.y = pV0->y + (pV1->y - pV0->y)*(2.0/3.0) + (pV2->y - pV1->y)*(2.0/3.0);
+		surfaceCoordinate.z = pV0->z + (pV1->z - pV0->z)*(2.0/3.0) + (pV2->z - pV1->z)*(2.0/3.0);
 		
+		NSLog(@"Sc = (%f : %f : %f)\n", surfaceCoordinate.x, surfaceCoordinate.y, surfaceCoordinate.z);
 		
-		//(v1 - v2) * (v2 - v3)
-		ux = pV0->x - pV1->x;
-		uy = pV0->y - pV1->y;
-		uz = pV0->z - pV1->z;
+		// FIXME: Use the normal coords from the model file instead
+		
+		// (v1 - v0) * (v2 - v0)
+		ux = pV1->x - pV0->x;
+		uy = pV1->y - pV0->y;
+		uz = pV1->z - pV0->z;
 
-		vx = pV2->x - pV1->x;
-		vy = pV2->y - pV1->y;
-		vz = pV2->z - pV1->z;
+		vx = pV2->x - pV0->x;
+		vy = pV2->y - pV0->y;
+		vz = pV2->z - pV0->z;
 
 		// find cross product of these two vectors
 		rx = ((uy * vz) - (uz * vy));
 		ry = ((uz * vx) - (ux * vz));
 		rz = ((ux * vy) - (uy * vx));
-
-		// Normalize to minimize weighting the average
-		d = sqrt((rx*rx) + (ry*ry) + (rz*rz));
-
-		if(d == 0.0)
-			NSLog(@"WARNING: Triangle %d - distance is zero!", i);
-		else
-		{
-			d = 1.0/d;
-			rx *= d;
-			ry *= d;
-			rz *= d;
-		}
 		
+		NSLog(@"Normal = (%f : %f : %f)\n", rx, ry, rz);
+
 		// Assign the normalized surface normal to the triangle
 		normalArray[i].x = rx;
 		normalArray[i].y = ry;

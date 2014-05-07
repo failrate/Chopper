@@ -50,5 +50,9 @@ typedef struct
     double x, y, z;
 } Vector3D;
 
+typedef struct
+{
+	float r, g, b;
+} Color3F;
 
 #endif

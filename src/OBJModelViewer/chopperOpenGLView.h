@@ -35,6 +35,8 @@
 	Vector3D *normalVectorLines;
 	unsigned int *normalLineIndices;
 
+	Color3F *colorList;
+	
     // Framerate timers
     NSTimer *renderTimer;
 
