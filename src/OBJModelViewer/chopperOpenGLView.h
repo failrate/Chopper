@@ -26,15 +26,15 @@
 	long normalCount;
 	long normalLineCount;
 
-	
+	// Main vertex list for use with OpenGL
     Vector3D *vertexList;
 	unsigned int *vertexIndices;
-
+	// Normal array (used when enabling lighting)
 	Vector3D *normalArray;
-	
+	// Array of lines used to draw normals
 	Vector3D *normalVectorLines;
 	unsigned int *normalLineIndices;
-
+	// Color array to add contrast to vertices
 	Color3F *colorList;
 	
     // Framerate timers
@@ -64,15 +64,17 @@
 	IBOutlet NSPopUpButton *buttonLightingEnable;
 	IBOutlet NSPopUpButton *buttonShadingModel;
 }
-// Interface actions for adjusting the rendering
-- (IBAction)selectRenderMode:(id)sender;
-- (IBAction)selectLightEnable:(id)sender;
-- (IBAction)selectShadeModel:(id)sender;
 
+// Interface actions for adjusting the rendering
+-(IBAction)selectRenderMode:(id)sender;
+-(IBAction)selectLightEnable:(id)sender;
+-(IBAction)selectShadeModel:(id)sender;
 // Camera sliding on the Z axis
 -(void)mouseDolly:(NSPoint)location;
 // Camera sliding in the X/Y plane
-- (void)mousePan:(NSPoint)location;
+-(void)mousePan:(NSPoint)location;
+// Internal functions for building arrays and normals
+-(void)generateVertexArrays;
+-(void)generateSurfaceNormals;
 
-- (void)generateVertexArrays;
 @end

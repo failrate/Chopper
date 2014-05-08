@@ -9,6 +9,18 @@
 #import "chopperOpenGLView.h"
 #include "trackball.h"
 
+/* *** Source Code Notes ***
+ 
+ These mouse input functions functions were adapted from the Cocoa OpenGL:
+	-mouseDown, -rightMouseDown, -otherMouseDown, -mouseUp, -mouseDragged, -scrollWheel,
+	-mouseDolly, -mousePan, -rightMouseUp, -otherMouseUp, -rightMouseDragged, -otherMouseDragged
+These matrix functions were adapted from Cocoa OpenGL:
+	-updateProjection and -updateModelView were also adapted from Cocoa OpenGL
+The following files were used unmodified (license remains intact: 
+    trackball.h, trackball.c
+ 
+*/
+
 @implementation chopperOpenGLView
 
 //////////////////////////////////////////////////////////////////////
@@ -46,12 +58,12 @@
     long lightingEnable = [sender indexOfSelectedItem];
 	
 	// Material
-    GLfloat mat_spec[] = {0.5, 0.5, 0.5, 1.0};
-    GLfloat mat_shine[] = {0.5};
+    float mat_spec[] = {0.5, 0.5, 0.5, 1.0};
+    float mat_shine[] = {0.5};
     // Position
-    GLfloat light_pos[] = {0.0, 0.0, -50.0, 0.0};
+    float light_pos[] = {0.0, 0.0, -50.0, 0.0};
     // Color
-    GLfloat light_color[] = {1.0, 1.0, 1.0, 1.0};
+    float light_color[] = {1.0, 1.0, 1.0, 1.0};
 	
     // Material specification commands
     glMaterialfv(GL_FRONT, GL_SPECULAR, mat_spec);
@@ -62,6 +74,7 @@
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light_color);
     glLightfv(GL_LIGHT0, GL_SPECULAR, light_color);
     
+	glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, 1);
 	// Set camera back to default
 	[self resetCameraPosition];
 
@@ -156,7 +169,7 @@
     showNormals = NO;
     showSurfaceNormals = NO;
 
-	glGeometryType = GL_LINE_LOOP;//GL_TRIANGLES;
+	glGeometryType = GL_LINE_LOOP;
 	renderMode = renderWireframe;
 
 	triCount = vertexCount = normalCount = 0;
@@ -170,8 +183,8 @@
 	memset(&origin, 0.0f, sizeof(Vector3D));
 
 	meshParser = [[omvParser alloc] init];
-	//theMesh = [meshParser parseObjFile:[meshParser loadObjFile:@"cube.obj"]];
-	theMesh = [meshParser parseObjFile:[meshParser loadObjFile:@"teapot.obj"]];
+	theMesh = [meshParser parseObjFile:[meshParser loadObjFile:@"cube.obj"]];
+	//theMesh = [meshParser parseObjFile:[meshParser loadObjFile:@"teapot.obj"]];
 	[self generateVertexArrays];
 	[self generateSurfaceNormals];
 	
@@ -612,7 +625,7 @@ static void drawAxes(float length, Vector3D *origin)
 	
 	if (wheelDelta)
 	{
-		GLfloat deltaAperture = wheelDelta * -cameraAperture / 200.0f;
+		float deltaAperture = wheelDelta * -cameraAperture / 200.0f;
 		cameraAperture += deltaAperture;
 		// Aperture must be 0.1 <= aperture < 180.0
 		if (cameraAperture < 0.1)
@@ -626,7 +639,7 @@ static void drawAxes(float length, Vector3D *origin)
 
 -(void)mouseDolly: (NSPoint) location
 {
-	GLfloat dollyPosition = (dollyPanStart[1] -location.y) * -positionVector.z / 300.0f;
+	float dollyPosition = (dollyPanStart[1] -location.y) * -positionVector.z / 300.0f;
 	positionVector.z += dollyPosition;
 	if (positionVector.z == 0.0)
 		positionVector.z = 0.0001;
@@ -636,8 +649,8 @@ static void drawAxes(float length, Vector3D *origin)
 
 - (void)mousePan: (NSPoint) location
 {
-	GLfloat panX = (dollyPanStart[0] - location.x) / (900.0f / -positionVector.z);
-	GLfloat panY = (dollyPanStart[1] - location.y) / (900.0f / -positionVector.z);
+	float panX = (dollyPanStart[0] - location.x) / (900.0f / -positionVector.z);
+	float panY = (dollyPanStart[1] - location.y) / (900.0f / -positionVector.z);
 	positionVector.x -= panX;
 	positionVector.y -= panY;
 	dollyPanStart[0] = location.x;
