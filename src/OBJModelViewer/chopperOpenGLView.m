@@ -170,7 +170,8 @@
 	memset(&origin, 0.0f, sizeof(Vector3D));
 
 	meshParser = [[omvParser alloc] init];
-	theMesh = [meshParser parseObjFile:[meshParser loadObjFile:@"cube.obj"]];
+	//theMesh = [meshParser parseObjFile:[meshParser loadObjFile:@"cube.obj"]];
+	theMesh = [meshParser parseObjFile:[meshParser loadObjFile:@"teapot.obj"]];
 	[self generateVertexArrays];
 	[self generateSurfaceNormals];
 	
@@ -290,10 +291,10 @@ static void drawAxes(float length, Vector3D *origin)
 - (void)drawSurfaceNormals
 {
 	glColor4f(0.0, 1.0, 1.0, 1.0);
-#if 0
+#if 1
 	glVertexPointer(3, GL_DOUBLE, 0, normalVectorLines);
 	glDrawElements(GL_LINES, (int)normalLineCount, GL_UNSIGNED_INT, normalLineIndices);
-#else
+#else // Test code below - used to show points for each normal
 	int ni[] = {0,1,2,3,4,5,6,7,8,9,10,11};
 	glVertexPointer(3, GL_DOUBLE, 0, normalArray);
 	glDrawElements(GL_POINTS, (int)normalCount, GL_UNSIGNED_INT, ni);
@@ -464,17 +465,17 @@ static void drawAxes(float length, Vector3D *origin)
 		pV1 = &vertexList[vertexIndices[i+1]];
 		pV2 = &vertexList[vertexIndices[i+2]];
 		
-		NSLog(@"V0 = %d (%f : %f : %f) | V1  = %d (%f : %f : %f) | V2 = %d (%f : %f : %f)\n",
-			  vertexIndices[i+0], pV0->x, pV0->y, pV0->z,
-			  vertexIndices[i+1], pV1->x, pV1->y, pV1->z,
-			  vertexIndices[i+2], pV2->x, pV2->y, pV2->z);
+		//NSLog(@"V0 = %d (%f : %f : %f) | V1  = %d (%f : %f : %f) | V2 = %d (%f : %f : %f)\n",
+		//	  vertexIndices[i+0], pV0->x, pV0->y, pV0->z,
+		//	  vertexIndices[i+1], pV1->x, pV1->y, pV1->z,
+		//	  vertexIndices[i+2], pV2->x, pV2->y, pV2->z);
 		
 		// Centroid formula (x,y,z) = (x1 + 2/3(x2-x1), y1 + 2/3(y2 - y1), z1 + 2/3(z2-z1))
 		surfaceCoordinate.x = pV0->x + (pV1->x - pV0->x)*(2.0/3.0) + (pV2->x - pV1->x)*(2.0/3.0);
 		surfaceCoordinate.y = pV0->y + (pV1->y - pV0->y)*(2.0/3.0) + (pV2->y - pV1->y)*(2.0/3.0);
 		surfaceCoordinate.z = pV0->z + (pV1->z - pV0->z)*(2.0/3.0) + (pV2->z - pV1->z)*(2.0/3.0);
 		
-		NSLog(@"Sc = (%f : %f : %f)\n", surfaceCoordinate.x, surfaceCoordinate.y, surfaceCoordinate.z);
+		//NSLog(@"Sc = (%f : %f : %f)\n", surfaceCoordinate.x, surfaceCoordinate.y, surfaceCoordinate.z);
 		
 		// FIXME: Use the normal coords from the model file instead
 		
@@ -492,7 +493,7 @@ static void drawAxes(float length, Vector3D *origin)
 		ry = ((uz * vx) - (ux * vz));
 		rz = ((ux * vy) - (uy * vx));
 		
-		NSLog(@"Normal = (%f : %f : %f)\n", rx, ry, rz);
+		//NSLog(@"Normal = (%f : %f : %f)\n", rx, ry, rz);
 
 		// Assign the normalized surface normal to the triangle
 		normalArray[i].x = rx;
