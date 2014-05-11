@@ -390,12 +390,14 @@ static void drawAxes(float length, Vector3D *origin)
 	int i  = 0, j = 0;
 	NSMutableArray *triArray = [NSMutableArray array];
 	NSMutableArray *vertArray = [NSMutableArray array];
-
+	
 	Color3F red = {1.0,0.0,0.0};
 	Color3F green = {0.0,1.0,0.0};
 	Color3F blue = {0.0,0.0,1.0};
 	Color3F *currentColor = &red;
 	int cc = 0;
+	
+	//NSLog(@"Normal count: %lu\n", (unsigned long)[[[[theMesh caryObjects] objectAtIndex:0] caryintNormalIndices] count]);
 	
 	// Get the total number of triangles and vertices
 	for (i = 0; i < [[theMesh caryObjects] count]; i++)
