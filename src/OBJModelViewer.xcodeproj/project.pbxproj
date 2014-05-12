@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1122D1391919802E00136EE6 /* teapot.obj in Resources */ = {isa = PBXBuildFile; fileRef = 1122D1381919802E00136EE6 /* teapot.obj */; };
 		11972752190ED291004B3E13 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11972751190ED291004B3E13 /* Cocoa.framework */; };
 		1197275C190ED291004B3E13 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1197275A190ED291004B3E13 /* InfoPlist.strings */; };
 		1197275E190ED291004B3E13 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1197275D190ED291004B3E13 /* main.m */; };
@@ -22,8 +21,19 @@
 		11972787190ED2E7004B3E13 /* chopperOpenGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 11972786190ED2E7004B3E13 /* chopperOpenGLView.m */; };
 		11D09BEA191049C000A3BE88 /* trackball.c in Sources */ = {isa = PBXBuildFile; fileRef = 11D09BE8191049C000A3BE88 /* trackball.c */; };
 		11D4A6A41918343F00880575 /* cube.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 11D4A6A11918343F00880575 /* cube.mtl */; };
-		11D4A6A51918343F00880575 /* cube.obj in Resources */ = {isa = PBXBuildFile; fileRef = 11D4A6A21918343F00880575 /* cube.obj */; };
 		11D4A6A61918343F00880575 /* obj.dot in Resources */ = {isa = PBXBuildFile; fileRef = 11D4A6A31918343F00880575 /* obj.dot */; };
+		F63E0B991920530900901546 /* Cube.obj in Resources */ = {isa = PBXBuildFile; fileRef = F63E0B8C1920530900901546 /* Cube.obj */; };
+		F63E0B9A1920530900901546 /* Man.obj in Resources */ = {isa = PBXBuildFile; fileRef = F63E0B8D1920530900901546 /* Man.obj */; };
+		F63E0B9B1920530900901546 /* Shuttle.obj in Resources */ = {isa = PBXBuildFile; fileRef = F63E0B8E1920530900901546 /* Shuttle.obj */; };
+		F63E0B9C1920530900901546 /* AirBoat.obj in Resources */ = {isa = PBXBuildFile; fileRef = F63E0B8F1920530900901546 /* AirBoat.obj */; };
+		F63E0B9D1920530900901546 /* Cartoon.obj in Resources */ = {isa = PBXBuildFile; fileRef = F63E0B901920530900901546 /* Cartoon.obj */; };
+		F63E0B9E1920530900901546 /* Cow.obj in Resources */ = {isa = PBXBuildFile; fileRef = F63E0B911920530900901546 /* Cow.obj */; };
+		F63E0B9F1920530900901546 /* Gourd.obj in Resources */ = {isa = PBXBuildFile; fileRef = F63E0B921920530900901546 /* Gourd.obj */; };
+		F63E0BA01920530900901546 /* Lamp in Resources */ = {isa = PBXBuildFile; fileRef = F63E0B931920530900901546 /* Lamp */; };
+		F63E0BA11920530900901546 /* Sandal.obj in Resources */ = {isa = PBXBuildFile; fileRef = F63E0B941920530900901546 /* Sandal.obj */; };
+		F63E0BA21920530900901546 /* Teapot.obj in Resources */ = {isa = PBXBuildFile; fileRef = F63E0B951920530900901546 /* Teapot.obj */; };
+		F63E0BA31920530900901546 /* Tetrahedron.obj in Resources */ = {isa = PBXBuildFile; fileRef = F63E0B961920530900901546 /* Tetrahedron.obj */; };
+		F63E0BA51920530900901546 /* ViolinCase.obj in Resources */ = {isa = PBXBuildFile; fileRef = F63E0B981920530900901546 /* ViolinCase.obj */; };
 		F69BA5011914270D00F57AA2 /* omvParser.m in Sources */ = {isa = PBXBuildFile; fileRef = F69BA5001914270D00F57AA2 /* omvParser.m */; };
 		F6FC8CE11913424200874700 /* omvMesh.m in Sources */ = {isa = PBXBuildFile; fileRef = F6FC8CE01913424200874700 /* omvMesh.m */; };
 /* End PBXBuildFile section */
@@ -39,7 +49,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1122D1381919802E00136EE6 /* teapot.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = teapot.obj; sourceTree = "<group>"; };
 		1197274E190ED291004B3E13 /* OBJModelViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OBJModelViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		11972751190ED291004B3E13 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		11972754190ED291004B3E13 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -65,8 +74,19 @@
 		11D09BE8191049C000A3BE88 /* trackball.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = trackball.c; sourceTree = "<group>"; };
 		11D09BE9191049C000A3BE88 /* trackball.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trackball.h; sourceTree = "<group>"; };
 		11D4A6A11918343F00880575 /* cube.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cube.mtl; sourceTree = "<group>"; };
-		11D4A6A21918343F00880575 /* cube.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cube.obj; sourceTree = "<group>"; };
 		11D4A6A31918343F00880575 /* obj.dot */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = obj.dot; sourceTree = "<group>"; };
+		F63E0B8C1920530900901546 /* Cube.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cube.obj; sourceTree = "<group>"; };
+		F63E0B8D1920530900901546 /* Man.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Man.obj; sourceTree = "<group>"; };
+		F63E0B8E1920530900901546 /* Shuttle.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Shuttle.obj; sourceTree = "<group>"; };
+		F63E0B8F1920530900901546 /* AirBoat.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AirBoat.obj; sourceTree = "<group>"; };
+		F63E0B901920530900901546 /* Cartoon.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartoon.obj; sourceTree = "<group>"; };
+		F63E0B911920530900901546 /* Cow.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cow.obj; sourceTree = "<group>"; };
+		F63E0B921920530900901546 /* Gourd.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Gourd.obj; sourceTree = "<group>"; };
+		F63E0B931920530900901546 /* Lamp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Lamp; sourceTree = "<group>"; };
+		F63E0B941920530900901546 /* Sandal.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Sandal.obj; sourceTree = "<group>"; };
+		F63E0B951920530900901546 /* Teapot.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Teapot.obj; sourceTree = "<group>"; };
+		F63E0B961920530900901546 /* Tetrahedron.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Tetrahedron.obj; sourceTree = "<group>"; };
+		F63E0B981920530900901546 /* ViolinCase.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ViolinCase.obj; sourceTree = "<group>"; };
 		F69BA4FF1914270D00F57AA2 /* omvParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = omvParser.h; sourceTree = "<group>"; };
 		F69BA5001914270D00F57AA2 /* omvParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = omvParser.m; sourceTree = "<group>"; };
 		F6FC8CDF1913424200874700 /* omvMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = omvMesh.h; sourceTree = "<group>"; };
@@ -188,9 +208,19 @@
 		11D4A6A01918342A00880575 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				1122D1381919802E00136EE6 /* teapot.obj */,
+				F63E0B8C1920530900901546 /* Cube.obj */,
+				F63E0B8D1920530900901546 /* Man.obj */,
+				F63E0B8E1920530900901546 /* Shuttle.obj */,
+				F63E0B8F1920530900901546 /* AirBoat.obj */,
+				F63E0B901920530900901546 /* Cartoon.obj */,
+				F63E0B911920530900901546 /* Cow.obj */,
+				F63E0B921920530900901546 /* Gourd.obj */,
+				F63E0B931920530900901546 /* Lamp */,
+				F63E0B941920530900901546 /* Sandal.obj */,
+				F63E0B951920530900901546 /* Teapot.obj */,
+				F63E0B961920530900901546 /* Tetrahedron.obj */,
+				F63E0B981920530900901546 /* ViolinCase.obj */,
 				11D4A6A11918343F00880575 /* cube.mtl */,
-				11D4A6A21918343F00880575 /* cube.obj */,
 				11D4A6A31918343F00880575 /* obj.dot */,
 			);
 			name = Resources;
@@ -273,14 +303,24 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1122D1391919802E00136EE6 /* teapot.obj in Resources */,
-				11D4A6A51918343F00880575 /* cube.obj in Resources */,
 				1197275C190ED291004B3E13 /* InfoPlist.strings in Resources */,
+				F63E0B9F1920530900901546 /* Gourd.obj in Resources */,
+				F63E0BA21920530900901546 /* Teapot.obj in Resources */,
+				F63E0BA31920530900901546 /* Tetrahedron.obj in Resources */,
 				11D4A6A41918343F00880575 /* cube.mtl in Resources */,
+				F63E0BA01920530900901546 /* Lamp in Resources */,
+				F63E0B9C1920530900901546 /* AirBoat.obj in Resources */,
 				1197276A190ED291004B3E13 /* Images.xcassets in Resources */,
 				11972762190ED291004B3E13 /* Credits.rtf in Resources */,
+				F63E0B9A1920530900901546 /* Man.obj in Resources */,
 				11D4A6A61918343F00880575 /* obj.dot in Resources */,
 				11972768190ED291004B3E13 /* MainMenu.xib in Resources */,
+				F63E0B9D1920530900901546 /* Cartoon.obj in Resources */,
+				F63E0BA11920530900901546 /* Sandal.obj in Resources */,
+				F63E0B9B1920530900901546 /* Shuttle.obj in Resources */,
+				F63E0B991920530900901546 /* Cube.obj in Resources */,
+				F63E0B9E1920530900901546 /* Cow.obj in Resources */,
+				F63E0BA51920530900901546 /* ViolinCase.obj in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

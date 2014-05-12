@@ -223,15 +223,22 @@
     return cobjMesh;
 }
 
--(NSArray*)loadObjFile:(NSString*) sFileName
+-(NSArray*)loadObjFile:(NSString*) sFileName FromBundle:(BOOL)bBundle
 {
     NSArray *aryReturn;
     NSString *sFileContents;
 
-	NSMutableString *filePath = [NSMutableString stringWithString:[[NSBundle mainBundle] pathForResource:[sFileName stringByDeletingPathExtension] ofType:[sFileName pathExtension]]];
-
-    sFileContents = [NSString stringWithContentsOfFile:filePath encoding:NSASCIIStringEncoding error:NULL];
-    
+    if(bBundle)
+    {
+        NSMutableString *filePath = [NSMutableString stringWithString:[[NSBundle mainBundle] pathForResource:[sFileName stringByDeletingPathExtension] ofType:[sFileName pathExtension]]];
+        
+        sFileContents = [NSString stringWithContentsOfFile:filePath encoding:NSASCIIStringEncoding error:NULL];
+    }
+    else
+    {
+        sFileContents = [NSString stringWithContentsOfFile:sFileName encoding:NSASCIIStringEncoding error:NULL];
+    }
+	
     aryReturn = [sFileContents componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
     
     return aryReturn;

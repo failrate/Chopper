@@ -25,6 +25,6 @@
 -(NSMutableArray*)parseFaceIndices: (NSArray*) sTokens;
 -(void)ensureCurrentObject;
 -(omvMesh*)parseObjFile:            (NSArray*) arysLines;
--(NSArray*)loadObjFile:             (NSString*) sFileName;
+-(NSArray*)loadObjFile:             (NSString*) sFileName FromBundle:(BOOL) bBundle;
 
 @end

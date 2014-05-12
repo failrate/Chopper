@@ -114,6 +114,38 @@ The following files were used unmodified (license remains intact:
 		showSurfaceNormals = FALSE;
 }
 
+-(IBAction)selectObjFile:(id)sender
+{
+    NSOpenPanel* panel = [NSOpenPanel openPanel];
+    
+    // This method displays the panel and returns immediately.
+    // The completion handler is called when the user selects an
+    // item or cancels the panel.
+    [panel beginWithCompletionHandler:^(NSInteger result){
+        if (result == NSFileHandlingPanelOKButton) {
+            NSURL*  theDoc = [[panel URLs] objectAtIndex:0];
+            
+            // remember the obj path
+            sObjPath = [[NSString alloc] initWithString:[theDoc path]];
+            
+            [self loadObjFile];
+        }
+        
+    }];
+};
+
+-(IBAction)selectPopUpObj:(id)sender
+{
+    NSString *sName = [[sender itemAtIndex:[sender indexOfSelectedItem]] title];
+    NSString *sFileName = [[NSString alloc] initWithFormat:@"%@.obj", sName];
+    
+    meshParser = [[omvParser alloc] init];
+    theMesh = [meshParser parseObjFile:[meshParser loadObjFile:sFileName FromBundle:true]];
+	// = [meshParser parseObjFile:[meshParser loadObjFile:@"cube.obj"]];
+	//theMesh = [meshParser parseObjFile:[meshParser loadObjFile:@"teapot.obj"]];
+	[self generateVertexArrays];
+	[self generateSurfaceNormals];
+}
 //////////////////////////////////////////////////////////////////////
 #pragma mark  ==== Object Initialization ====
 //////////////////////////////////////////////////////////////////////
@@ -168,10 +200,10 @@ The following files were used unmodified (license remains intact:
 {
     showNormals = NO;
     showSurfaceNormals = NO;
-
+    
 	glGeometryType = GL_LINE_LOOP;
 	renderMode = renderWireframe;
-
+    
 	triCount = vertexCount = normalCount = 0;
 	
 	memset(&positionVector, 0.0f, sizeof(Vector3D));
@@ -181,9 +213,10 @@ The following files were used unmodified (license remains intact:
 	memset(&trackballRotation, 0.0f, sizeof(float)*4);
 	memset(&modelRotation, 0.0f, sizeof(float)*4);
 	memset(&origin, 0.0f, sizeof(Vector3D));
-
+    
 	meshParser = [[omvParser alloc] init];
-	theMesh = [meshParser parseObjFile:[meshParser loadObjFile:@"cube.obj"]];
+    theMesh = [meshParser parseObjFile:[meshParser loadObjFile:@"Cube.obj" FromBundle:true]];
+	// = [meshParser parseObjFile:[meshParser loadObjFile:@"cube.obj"]];
 	//theMesh = [meshParser parseObjFile:[meshParser loadObjFile:@"teapot.obj"]];
 	[self generateVertexArrays];
 	[self generateSurfaceNormals];
@@ -193,7 +226,7 @@ The following files were used unmodified (license remains intact:
 	objectSize = 10.0f;
 	dollyPanStart[0] = dollyPanStart[1] = 0;
 	dolly = pan = trackball = FALSE;
-
+    
 	// Setup the render timer
 	renderTimer = [NSTimer timerWithTimeInterval:kFrameTimeInterval
 										  target:self
@@ -206,7 +239,16 @@ The following files were used unmodified (license remains intact:
 	[[NSRunLoop currentRunLoop] addTimer:renderTimer forMode:NSEventTrackingRunLoopMode];
 	
 	[meshControlWindow makeKeyAndOrderFront:self];
-	
+}
+
+-(void)loadObjFile
+{
+    meshParser = [[omvParser alloc] init];
+    theMesh = [meshParser parseObjFile:[meshParser loadObjFile:sObjPath FromBundle:false]];
+	// = [meshParser parseObjFile:[meshParser loadObjFile:@"cube.obj"]];
+	//theMesh = [meshParser parseObjFile:[meshParser loadObjFile:@"teapot.obj"]];
+	[self generateVertexArrays];
+	[self generateSurfaceNormals];
 }
 //////////////////////////////////////////////////////////////////////
 #pragma mark  ==== Rendering Functions ====
