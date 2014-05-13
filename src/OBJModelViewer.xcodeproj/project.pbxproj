@@ -23,8 +23,6 @@
 		11D4A6A41918343F00880575 /* cube.mtl in Resources */ = {isa = PBXBuildFile; fileRef = 11D4A6A11918343F00880575 /* cube.mtl */; };
 		11D4A6A61918343F00880575 /* obj.dot in Resources */ = {isa = PBXBuildFile; fileRef = 11D4A6A31918343F00880575 /* obj.dot */; };
 		F63E0B991920530900901546 /* Cube.obj in Resources */ = {isa = PBXBuildFile; fileRef = F63E0B8C1920530900901546 /* Cube.obj */; };
-		F63E0B9A1920530900901546 /* Man.obj in Resources */ = {isa = PBXBuildFile; fileRef = F63E0B8D1920530900901546 /* Man.obj */; };
-		F63E0B9B1920530900901546 /* Shuttle.obj in Resources */ = {isa = PBXBuildFile; fileRef = F63E0B8E1920530900901546 /* Shuttle.obj */; };
 		F63E0B9C1920530900901546 /* AirBoat.obj in Resources */ = {isa = PBXBuildFile; fileRef = F63E0B8F1920530900901546 /* AirBoat.obj */; };
 		F63E0B9D1920530900901546 /* Cartoon.obj in Resources */ = {isa = PBXBuildFile; fileRef = F63E0B901920530900901546 /* Cartoon.obj */; };
 		F63E0B9E1920530900901546 /* Cow.obj in Resources */ = {isa = PBXBuildFile; fileRef = F63E0B911920530900901546 /* Cow.obj */; };
@@ -76,8 +74,6 @@
 		11D4A6A11918343F00880575 /* cube.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = cube.mtl; sourceTree = "<group>"; };
 		11D4A6A31918343F00880575 /* obj.dot */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = obj.dot; sourceTree = "<group>"; };
 		F63E0B8C1920530900901546 /* Cube.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cube.obj; sourceTree = "<group>"; };
-		F63E0B8D1920530900901546 /* Man.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Man.obj; sourceTree = "<group>"; };
-		F63E0B8E1920530900901546 /* Shuttle.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Shuttle.obj; sourceTree = "<group>"; };
 		F63E0B8F1920530900901546 /* AirBoat.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AirBoat.obj; sourceTree = "<group>"; };
 		F63E0B901920530900901546 /* Cartoon.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartoon.obj; sourceTree = "<group>"; };
 		F63E0B911920530900901546 /* Cow.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cow.obj; sourceTree = "<group>"; };
@@ -209,8 +205,6 @@
 			isa = PBXGroup;
 			children = (
 				F63E0B8C1920530900901546 /* Cube.obj */,
-				F63E0B8D1920530900901546 /* Man.obj */,
-				F63E0B8E1920530900901546 /* Shuttle.obj */,
 				F63E0B8F1920530900901546 /* AirBoat.obj */,
 				F63E0B901920530900901546 /* Cartoon.obj */,
 				F63E0B911920530900901546 /* Cow.obj */,
@@ -312,12 +306,10 @@
 				F63E0B9C1920530900901546 /* AirBoat.obj in Resources */,
 				1197276A190ED291004B3E13 /* Images.xcassets in Resources */,
 				11972762190ED291004B3E13 /* Credits.rtf in Resources */,
-				F63E0B9A1920530900901546 /* Man.obj in Resources */,
 				11D4A6A61918343F00880575 /* obj.dot in Resources */,
 				11972768190ED291004B3E13 /* MainMenu.xib in Resources */,
 				F63E0B9D1920530900901546 /* Cartoon.obj in Resources */,
 				F63E0BA11920530900901546 /* Sandal.obj in Resources */,
-				F63E0B9B1920530900901546 /* Shuttle.obj in Resources */,
 				F63E0B991920530900901546 /* Cube.obj in Resources */,
 				F63E0B9E1920530900901546 /* Cow.obj in Resources */,
 				F63E0BA51920530900901546 /* ViolinCase.obj in Resources */,

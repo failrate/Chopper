@@ -561,7 +561,7 @@ static void drawAxes(float length, Vector3D *origin)
 
 		// The normal = normalized cross product of u and v
 		[self crossVector3D:&u otherVector:&v result:&r];
-		[self normalizeVector:&r];
+		//[self normalizeVector:&r];
 		
 		//NSLog(@"Normal = (%f : %f : %f)\n", rx, ry, rz);
 
