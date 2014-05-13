@@ -29,7 +29,7 @@
 		F63E0B9D1920530900901546 /* Cartoon.obj in Resources */ = {isa = PBXBuildFile; fileRef = F63E0B901920530900901546 /* Cartoon.obj */; };
 		F63E0B9E1920530900901546 /* Cow.obj in Resources */ = {isa = PBXBuildFile; fileRef = F63E0B911920530900901546 /* Cow.obj */; };
 		F63E0B9F1920530900901546 /* Gourd.obj in Resources */ = {isa = PBXBuildFile; fileRef = F63E0B921920530900901546 /* Gourd.obj */; };
-		F63E0BA01920530900901546 /* Lamp in Resources */ = {isa = PBXBuildFile; fileRef = F63E0B931920530900901546 /* Lamp */; };
+		F63E0BA01920530900901546 /* Lamp.obj in Resources */ = {isa = PBXBuildFile; fileRef = F63E0B931920530900901546 /* Lamp.obj */; };
 		F63E0BA11920530900901546 /* Sandal.obj in Resources */ = {isa = PBXBuildFile; fileRef = F63E0B941920530900901546 /* Sandal.obj */; };
 		F63E0BA21920530900901546 /* Teapot.obj in Resources */ = {isa = PBXBuildFile; fileRef = F63E0B951920530900901546 /* Teapot.obj */; };
 		F63E0BA31920530900901546 /* Tetrahedron.obj in Resources */ = {isa = PBXBuildFile; fileRef = F63E0B961920530900901546 /* Tetrahedron.obj */; };
@@ -82,7 +82,7 @@
 		F63E0B901920530900901546 /* Cartoon.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartoon.obj; sourceTree = "<group>"; };
 		F63E0B911920530900901546 /* Cow.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cow.obj; sourceTree = "<group>"; };
 		F63E0B921920530900901546 /* Gourd.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Gourd.obj; sourceTree = "<group>"; };
-		F63E0B931920530900901546 /* Lamp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Lamp; sourceTree = "<group>"; };
+		F63E0B931920530900901546 /* Lamp.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Lamp.obj; sourceTree = "<group>"; };
 		F63E0B941920530900901546 /* Sandal.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Sandal.obj; sourceTree = "<group>"; };
 		F63E0B951920530900901546 /* Teapot.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Teapot.obj; sourceTree = "<group>"; };
 		F63E0B961920530900901546 /* Tetrahedron.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Tetrahedron.obj; sourceTree = "<group>"; };
@@ -215,7 +215,7 @@
 				F63E0B901920530900901546 /* Cartoon.obj */,
 				F63E0B911920530900901546 /* Cow.obj */,
 				F63E0B921920530900901546 /* Gourd.obj */,
-				F63E0B931920530900901546 /* Lamp */,
+				F63E0B931920530900901546 /* Lamp.obj */,
 				F63E0B941920530900901546 /* Sandal.obj */,
 				F63E0B951920530900901546 /* Teapot.obj */,
 				F63E0B961920530900901546 /* Tetrahedron.obj */,
@@ -308,7 +308,7 @@
 				F63E0BA21920530900901546 /* Teapot.obj in Resources */,
 				F63E0BA31920530900901546 /* Tetrahedron.obj in Resources */,
 				11D4A6A41918343F00880575 /* cube.mtl in Resources */,
-				F63E0BA01920530900901546 /* Lamp in Resources */,
+				F63E0BA01920530900901546 /* Lamp.obj in Resources */,
 				F63E0B9C1920530900901546 /* AirBoat.obj in Resources */,
 				1197276A190ED291004B3E13 /* Images.xcassets in Resources */,
 				11972762190ED291004B3E13 /* Credits.rtf in Resources */,
