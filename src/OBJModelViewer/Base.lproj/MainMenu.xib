@@ -857,6 +857,9 @@
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="selectDrawAxisLines:" target="bil-MW-DXT" id="7xi-ka-BpM"/>
+                        </connections>
                     </button>
                 </subviews>
             </view>
