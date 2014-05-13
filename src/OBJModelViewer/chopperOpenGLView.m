@@ -139,12 +139,24 @@ The following files were used unmodified (license remains intact:
     NSString *sName = [[sender itemAtIndex:[sender indexOfSelectedItem]] title];
     NSString *sFileName = [[NSString alloc] initWithFormat:@"%@.obj", sName];
     
+	// Stop vertex array processing
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_COLOR_ARRAY);
+	if ([buttonLightingEnable indexOfSelectedItem] == 1)
+		glDisableClientState(GL_NORMAL_ARRAY);
+
     meshParser = [[omvParser alloc] init];
     theMesh = [meshParser parseObjFile:[meshParser loadObjFile:sFileName FromBundle:true]];
 	// = [meshParser parseObjFile:[meshParser loadObjFile:@"cube.obj"]];
 	//theMesh = [meshParser parseObjFile:[meshParser loadObjFile:@"teapot.obj"]];
 	[self generateVertexArrays];
 	[self generateSurfaceNormals];
+
+	// Reenable vertex arrays
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_COLOR_ARRAY);
+	if ([buttonLightingEnable indexOfSelectedItem] == 1)
+		glEnableClientState(GL_NORMAL_ARRAY);
 }
 //////////////////////////////////////////////////////////////////////
 #pragma mark  ==== Object Initialization ====

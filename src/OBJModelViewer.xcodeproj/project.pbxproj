@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		118B9BA31921BD7F00506D95 /* man.obj in Resources */ = {isa = PBXBuildFile; fileRef = 118B9BA11921BD7F00506D95 /* man.obj */; };
+		118B9BA41921BD7F00506D95 /* Shuttle.obj in Resources */ = {isa = PBXBuildFile; fileRef = 118B9BA21921BD7F00506D95 /* Shuttle.obj */; };
 		11972752190ED291004B3E13 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11972751190ED291004B3E13 /* Cocoa.framework */; };
 		1197275C190ED291004B3E13 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1197275A190ED291004B3E13 /* InfoPlist.strings */; };
 		1197275E190ED291004B3E13 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1197275D190ED291004B3E13 /* main.m */; };
@@ -47,6 +49,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		118B9BA11921BD7F00506D95 /* man.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = man.obj; sourceTree = "<group>"; };
+		118B9BA21921BD7F00506D95 /* Shuttle.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Shuttle.obj; sourceTree = "<group>"; };
 		1197274E190ED291004B3E13 /* OBJModelViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OBJModelViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		11972751190ED291004B3E13 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		11972754190ED291004B3E13 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -204,6 +208,8 @@
 		11D4A6A01918342A00880575 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				118B9BA11921BD7F00506D95 /* man.obj */,
+				118B9BA21921BD7F00506D95 /* Shuttle.obj */,
 				F63E0B8C1920530900901546 /* Cube.obj */,
 				F63E0B8F1920530900901546 /* AirBoat.obj */,
 				F63E0B901920530900901546 /* Cartoon.obj */,
@@ -299,12 +305,14 @@
 			files = (
 				1197275C190ED291004B3E13 /* InfoPlist.strings in Resources */,
 				F63E0B9F1920530900901546 /* Gourd.obj in Resources */,
+				118B9BA31921BD7F00506D95 /* man.obj in Resources */,
 				F63E0BA21920530900901546 /* Teapot.obj in Resources */,
 				F63E0BA31920530900901546 /* Tetrahedron.obj in Resources */,
 				11D4A6A41918343F00880575 /* cube.mtl in Resources */,
 				F63E0BA01920530900901546 /* Lamp.obj in Resources */,
 				F63E0B9C1920530900901546 /* AirBoat.obj in Resources */,
 				1197276A190ED291004B3E13 /* Images.xcassets in Resources */,
+				118B9BA41921BD7F00506D95 /* Shuttle.obj in Resources */,
 				11972762190ED291004B3E13 /* Credits.rtf in Resources */,
 				11D4A6A61918343F00880575 /* obj.dot in Resources */,
 				11972768190ED291004B3E13 /* MainMenu.xib in Resources */,
