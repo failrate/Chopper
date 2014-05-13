@@ -20,6 +20,7 @@
 {
 	omvMesh *theMesh;
 	omvParser *meshParser;
+    NSString *sObjPath;
 	
 	long triCount;
 	long vertexCount;
@@ -69,6 +70,9 @@
 -(IBAction)selectRenderMode:(id)sender;
 -(IBAction)selectLightEnable:(id)sender;
 -(IBAction)selectShadeModel:(id)sender;
+// Interface for selecting the obj file
+-(IBAction)selectObjFile:(id)sender;
+-(IBAction)selectPopUpObj:(id)sender;
 // Camera sliding on the Z axis
 -(void)mouseDolly:(NSPoint)location;
 // Camera sliding in the X/Y plane
@@ -76,5 +80,5 @@
 // Internal functions for building arrays and normals
 -(void)generateVertexArrays;
 -(void)generateSurfaceNormals;
-
+-(void)loadObjFile;
 @end
