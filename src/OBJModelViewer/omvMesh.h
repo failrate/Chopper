@@ -65,7 +65,7 @@
 -(void)addTextureCoord: (Vector3*)aryv3Coord;
 -(void)addNormalCoord: (Vector3*)aryv3Coord;
 -(void)addFace: (NSMutableArray*)aryintVertexIndices Texture: (NSMutableArray*)aryintTextIndices Normal: (NSMutableArray*)aryintNormalIndices Smoothing: (BOOL)bUseSmoothing Material: (NSString*)sMaterialName;
--(NSMutableArray*)getFacesAsTriangles;
+-(NSMutableArray*)getFacesAsTriangles:(BOOL)sharedVertices;
 -(NSMutableArray*)getUVS;
 -(void)addGroup: (NSString*) sName;
 -(void)ensureCurrentGroup;

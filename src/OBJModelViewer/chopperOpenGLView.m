@@ -148,7 +148,7 @@ The following files were used unmodified (license remains intact:
 	
     // Depth Buffer Operations
     glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
+    glDepthFunc(GL_LEQUAL);
 	
     // Face culling
     glFrontFace(GL_CCW);
@@ -183,8 +183,8 @@ The following files were used unmodified (license remains intact:
 	memset(&origin, 0.0f, sizeof(Vector3D));
 
 	meshParser = [[omvParser alloc] init];
-	theMesh = [meshParser parseObjFile:[meshParser loadObjFile:@"cube.obj"]];
-	//theMesh = [meshParser parseObjFile:[meshParser loadObjFile:@"teapot.obj"]];
+	//theMesh = [meshParser parseObjFile:[meshParser loadObjFile:@"cube.obj"]];
+	theMesh = [meshParser parseObjFile:[meshParser loadObjFile:@"teapot.obj"]];
 	[self generateVertexArrays];
 	[self generateSurfaceNormals];
 	
@@ -306,11 +306,18 @@ static void drawAxes(float length, Vector3D *origin)
 	glColor4f(0.0, 1.0, 1.0, 1.0);
 #if 1
 	glVertexPointer(3, GL_DOUBLE, 0, normalVectorLines);
-	glDrawElements(GL_LINES, (int)normalLineCount, GL_UNSIGNED_INT, normalLineIndices);
+	glDrawElements(GL_LINES, (int)normalLineCount*2, GL_UNSIGNED_INT, normalLineIndices);
 #else // Test code below - used to show points for each normal
-	int ni[] = {0,1,2,3,4,5,6,7,8,9,10,11};
-	glVertexPointer(3, GL_DOUBLE, 0, normalArray);
-	glDrawElements(GL_POINTS, (int)normalCount, GL_UNSIGNED_INT, ni);
+	int i = 0;
+	glBegin(GL_POINTS);
+	for (i = 0; i < normalCount; i++)
+	{
+		glVertex3d(normalArray[i].x, normalArray[i].y, normalArray[i].z);
+	}
+	glEnd();
+	//int ni[] = {0,1,2,3,4,5,6,7,8,9,10,11};
+	//glVertexPointer(3, GL_DOUBLE, 0, normalArray);
+	//glDrawElements(GL_POINTS, (int)normalCount, GL_UNSIGNED_INT, ni);
 #endif
 }
 
@@ -327,7 +334,7 @@ static void drawAxes(float length, Vector3D *origin)
 	// Clear color and depth buffers
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	// Draw the axes
-	drawAxes(40.0, &origin);
+	//drawAxes(40.0, &origin);
 	// Set our vertex pointer to the vertex array
 	glVertexPointer(3, GL_DOUBLE, 0, vertexList);
 	// Set the color array
@@ -387,7 +394,7 @@ static void drawAxes(float length, Vector3D *origin)
 {
 	// Convert an array of Vector3 objects into ararys of Vector3D structs (3 floats)
 	// Convert an array of NSNumbers (vertex indices) into an array of ints
-	int i  = 0, j = 0;
+	int i  = 0, j = 0;//, k = 0;
 	NSMutableArray *triArray = [NSMutableArray array];
 	NSMutableArray *vertArray = [NSMutableArray array];
 	
@@ -402,14 +409,28 @@ static void drawAxes(float length, Vector3D *origin)
 	// Get the total number of triangles and vertices
 	for (i = 0; i < [[theMesh caryObjects] count]; i++)
 	{
-		[triArray addObjectsFromArray:[[[theMesh caryObjects] objectAtIndex:i] getFacesAsTriangles]];
+		[triArray addObjectsFromArray:[[[theMesh caryObjects] objectAtIndex:i] getFacesAsTriangles:TRUE]];
 		[vertArray addObjectsFromArray:[[[theMesh caryObjects] objectAtIndex:i] caryv3Vertices]];
 	}
 
 	// Vertex index count and vertex count
 	triCount = [triArray count];
 	vertexCount = [vertArray count];
-							   
+	
+	NSLog(@"Vertex Count: %ld, Triangle Count: %ld", vertexCount, triCount);
+	
+	//for (k = 0; k < triCount; k+=3) {
+	//	NSLog(@"Tri %d: %d : %d : %d", k, [[triArray objectAtIndex:k] intValue],
+	//									  [[triArray objectAtIndex:k+1] intValue],
+	//								      [[triArray objectAtIndex:k+2] intValue]);
+	//}
+	//for (k = 0; k < vertexCount; k++) {
+	//	NSLog(@"Vertex %d: %f : %f : %f", k,
+	//		  [[vertArray objectAtIndex:k] x],
+	//		  [[vertArray objectAtIndex:k] y],
+	//		  [[vertArray objectAtIndex:k] z]);
+	//}
+	
 	// Free memeory since we're building the list
 	if (vertexList)
 		free(vertexList);
@@ -458,7 +479,8 @@ static void drawAxes(float length, Vector3D *origin)
 	// Generate a normal for each triangle
 	int i = 0, j = 0;
 	Vector3D *pV0, *pV1, *pV2;
-	float ux, uy, uz, vx, vy, vz, rx, ry, rz;
+
+	Vector3D u, v, r;
 
 	if (normalArray)
 		free(normalArray);
@@ -471,7 +493,7 @@ static void drawAxes(float length, Vector3D *origin)
 	normalVectorLines = malloc(2 * triCount * sizeof(Vector3D));
 	normalLineIndices  = malloc(2 * triCount * sizeof(int));
 
-	Vector3D surfaceCoordinate;
+	//Vector3D surfaceCoordinate;
 	
 	for (i = 0; i < triCount; i += 3)
 	{
@@ -485,52 +507,78 @@ static void drawAxes(float length, Vector3D *origin)
 		//	  vertexIndices[i+1], pV1->x, pV1->y, pV1->z,
 		//	  vertexIndices[i+2], pV2->x, pV2->y, pV2->z);
 		
-		// Centroid formula (x,y,z) = (x1 + 2/3(x2-x1), y1 + 2/3(y2 - y1), z1 + 2/3(z2-z1))
-		surfaceCoordinate.x = pV0->x + (pV1->x - pV0->x)*(2.0/3.0) + (pV2->x - pV1->x)*(2.0/3.0);
-		surfaceCoordinate.y = pV0->y + (pV1->y - pV0->y)*(2.0/3.0) + (pV2->y - pV1->y)*(2.0/3.0);
-		surfaceCoordinate.z = pV0->z + (pV1->z - pV0->z)*(2.0/3.0) + (pV2->z - pV1->z)*(2.0/3.0);
-		
-		//NSLog(@"Sc = (%f : %f : %f)\n", surfaceCoordinate.x, surfaceCoordinate.y, surfaceCoordinate.z);
-		
-		// FIXME: Use the normal coords from the model file instead
-		
+		// Per the formula on OpenGL.org
 		// (v1 - v0) * (v2 - v0)
-		ux = pV1->x - pV0->x;
-		uy = pV1->y - pV0->y;
-		uz = pV1->z - pV0->z;
+		u.x = pV1->x - pV0->x;
+		u.y = pV1->y - pV0->y;
+		u.z = pV1->z - pV0->z;
 
-		vx = pV2->x - pV0->x;
-		vy = pV2->y - pV0->y;
-		vz = pV2->z - pV0->z;
+		v.x = pV2->x - pV0->x;
+		v.y = pV2->y - pV0->y;
+		v.z = pV2->z - pV0->z;
 
-		// find cross product of these two vectors
-		rx = ((uy * vz) - (uz * vy));
-		ry = ((uz * vx) - (ux * vz));
-		rz = ((ux * vy) - (uy * vx));
+		// The normal = normalized cross product of u and v
+		[self crossVector3D:&u otherVector:&v result:&r];
+		[self normalizeVector:&r];
 		
 		//NSLog(@"Normal = (%f : %f : %f)\n", rx, ry, rz);
 
 		// Assign the normalized surface normal to the triangle
-		normalArray[i].x = rx;
-		normalArray[i].y = ry;
-		normalArray[i].z = rz;
+		normalArray[i].x = r.x;
+		normalArray[i].y = r.y;
+		normalArray[i].z = r.z;
+		//NSLog(@"Normal %ld: %f : %f : %f", normalCount, normalArray[i].x, normalArray[i].y, normalArray[i].z);
 		normalCount++;
 		
 		// Add the normal line to lines array
 		normalLineIndices[j] = j;
 		normalVectorLines[j].x = normalArray[i].x;
 		normalVectorLines[j].y = normalArray[i].y;
-		normalVectorLines[j++].z = normalArray[i].z;
-		
-		normalLineIndices[j] = j;
-		normalVectorLines[j].x = surfaceCoordinate.x;
-		normalVectorLines[j].y = surfaceCoordinate.y;
-		normalVectorLines[j++].z = surfaceCoordinate.z;
+		normalVectorLines[j].z = normalArray[i].z;
+
+		normalLineIndices[j+1] = j+1;
+		normalVectorLines[j+1].x   = 3*normalArray[i].x ; //surfaceCoordinate.x;
+		normalVectorLines[j+1].y   = 3*normalArray[i].y ; //surfaceCoordinate.y;
+		normalVectorLines[j+1].z   = 3*normalArray[i].z ; //surfaceCoordinate.z;
+		//NSLog(@"Normal Line Indices %d , %d", normalLineIndices[j], normalLineIndices[j+1]);
+		j += 2;
 		// Track the number of normal lines generated
 		normalLineCount++;
 	}
+	NSLog(@"Normal geneneration complete\n");
 }
 
+- (void)crossVector3D:(Vector3D*) u otherVector:(Vector3D*) v result:(Vector3D*) resultVector
+{
+	resultVector->x = (u->y * v->z) - (u->z * v->y);
+	resultVector->y = (u->z * v->x) - (u->x * v->z);
+	resultVector->z = (u->x * v->y) - (u->y * v->x);
+}
+
+- (double)magnitudeOfVector3:(Vector3D*) vec3
+{
+	// ABS is unnecessary - squared terms can never be negative and no subtraction
+	//	return abs(sqrt(pow(vec3->x, 2) + pow(vec3->y, 2) + pow(vec3->z, 2)));
+	return sqrt(pow(vec3->x, 2) + pow(vec3->y, 2) + pow(vec3->z, 2));
+}
+
+- (Vector3D*)normalizeVector:(Vector3D*) vec3
+{
+	double magnitude = [self magnitudeOfVector3:vec3];
+	//Vector3 normalized = new Vector3();
+	//magnitude = vec.X + vec.Y + vec.Z;
+	if (magnitude != 0.0f)
+	{
+		vec3->x /= magnitude;
+		vec3->y /= magnitude;
+		vec3->z /= magnitude;
+		//normalized.x = vec3->x/magnitude;
+		//normalized.y = vec3->y/magnitude;
+		//normalized.z = vec3->z/magnitude;
+	}
+	return vec3;
+	//return normalized;
+}
 //////////////////////////////////////////////////////////////////////
 #pragma mark  ==== Mouse Input Section ====
 //////////////////////////////////////////////////////////////////////
