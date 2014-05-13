@@ -60,16 +60,20 @@
     // Display flags
     BOOL showNormals;
     BOOL showSurfaceNormals;
+	BOOL drawAxisLines;
 	
 	IBOutlet NSWindow *meshControlWindow;
 	IBOutlet NSPopUpButton *buttonLightingEnable;
 	IBOutlet NSPopUpButton *buttonShadingModel;
+	IBOutlet NSButton *buttonDrawAxisLines;
 }
 
 // Interface actions for adjusting the rendering
 -(IBAction)selectRenderMode:(id)sender;
 -(IBAction)selectLightEnable:(id)sender;
 -(IBAction)selectShadeModel:(id)sender;
+-(IBAction)selectShowSurfaceNormals:(id)sender;
+-(IBAction)selectDrawAxisLines:(id)sender;
 // Interface for selecting the obj file
 -(IBAction)selectObjFile:(id)sender;
 -(IBAction)selectPopUpObj:(id)sender;
@@ -81,4 +85,5 @@
 -(void)generateVertexArrays;
 -(void)generateSurfaceNormals;
 -(void)loadObjFile;
+
 @end

@@ -132,7 +132,7 @@
 
 -(NSMutableArray*)getFacesAsTriangles:(BOOL)sharedVertices
 {
-    int iTemp, i, j, index = 0;
+    int iTemp, i, j;
     NSMutableArray *aryTriangles = [[NSMutableArray alloc] init];
     omvFace *faceTemp;    // pointer to omvFace object
     NSNumber *iNum;
@@ -150,15 +150,6 @@
 			{
 				if (faceTemp.caryintVertexIndices.count == 4) 
 				{
-					// Assuming quads and hope for consistent winding order
-					// 2 triangles per quad
-					/*
-					    1-->2
-						^	|
-					    3<--4
-					 
-					*/
-
 					iNum = [NSNumber numberWithInt:[[faceTemp.caryintVertexIndices objectAtIndex:0] intValue]-1];
 					[aryTriangles addObject:iNum];
 					iNum = [NSNumber numberWithInt:[[faceTemp.caryintVertexIndices objectAtIndex:1] intValue]-1];
@@ -186,7 +177,6 @@
 			}
 			else
 			{
-				//[aryTriangles addObject:[NSNumber numberWithInt:[[faceTemp.caryintVertexIndices objectAtIndex:index++] intValue]]];
 				// index 0
 				iTemp = [[faceTemp.caryintVertexIndices objectAtIndex:0]intValue];
 				iTemp--;
@@ -237,96 +227,6 @@
     
     return aryTriangles;
 }
-
-/*
-public List<int> facesAsTriangles(bool sharedVertices = true)
-{
-	List<int> triangles = new List<int>();
-	int index = 0;
-	foreach (ChopperGroup group in groups)
-	{
-		foreach (ChopperFace face in group.faces)
-		{
-			if (sharedVertices)
-			{
-				triangles.Add(face.vertexIndices[1] - 1);
-				triangles.Add(face.vertexIndices[2] - 1);
-				triangles.Add(face.vertexIndices[0] - 1);
-				if (face.vertexIndices.Count > 3)
-				{
-					triangles.Add(face.vertexIndices[2] - 1);
-					triangles.Add(face.vertexIndices[3] - 1);
-					triangles.Add(face.vertexIndices[0] - 1);
-				}
-			}
-			else
-			{
-				triangles.Add(index++);
-				triangles.Add(index++);
-				triangles.Add(index++);
-				if (face.vertexIndices.Count > 3)
-				{
-					triangles.Add(index++);
-					triangles.Add(index++);
-					triangles.Add(index++);
-				}
-			}
-		}
-	}
-	return triangles;
-}
-
-public List<Vector3> GetNormals(bool sharedVertices = true)
-{
-	List<Vector3> normals = new List<Vector3>();
-	foreach (ChopperGroup group in groups)
-	{
-		foreach (ChopperFace face in group.faces)
-		{
-			Vector3 normal = Vector3.Normalize(Vector3.Cross(vertices[face.vertexIndices[1] - 1] - vertices[face.vertexIndices[0] - 1], vertices[face.vertexIndices[2] - 1] - vertices[face.vertexIndices[0] - 1]));
-			normals.Add(normal);
-			normals.Add(normal);
-			normals.Add(normal);
-			if (face.vertexIndices.Count > 3)
-			{
-				normal = Vector3.Normalize(Vector3.Cross(vertices[face.vertexIndices[2] - 1] - vertices[face.vertexIndices[0] - 1], vertices[face.vertexIndices[3] - 1] - vertices[face.vertexIndices[0] - 1]));
-				normals.Add(normal);
-				normals.Add(normal);
-				normals.Add(normal);
-			}
-		}
-	}
-	return normals;
-}
-
-public List<Vector3> GetVertices(bool sharedVertices = true)
-{
-	if (sharedVertices)
-	{
-		return vertices;
-	}
-	else
-	{
-		List<Vector3> verts = new List<Vector3>();
-		foreach (ChopperGroup group in groups)
-		{
-			foreach (ChopperFace face in group.faces)
-			{
-				verts.Add(vertices[face.vertexIndices[1] - 1]);
-				verts.Add(vertices[face.vertexIndices[2] - 1]);
-				verts.Add(vertices[face.vertexIndices[0] - 1]);
-				if (face.vertexIndices.Count > 3)
-				{
-					verts.Add(vertices[face.vertexIndices[2] - 1]);
-					verts.Add(vertices[face.vertexIndices[3] - 1]);
-					verts.Add(vertices[face.vertexIndices[0] - 1]);
-				}
-			}
-		}
-		return verts;
-	}
-}
-*/
 
 -(NSMutableArray*)getUVS
 {

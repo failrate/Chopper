@@ -114,6 +114,14 @@ The following files were used unmodified (license remains intact:
 		showSurfaceNormals = FALSE;
 }
 
+-(IBAction)selectDrawAxisLines:(id)sender
+{
+	if ([sender state])
+		drawAxisLines = TRUE;
+	else
+		drawAxisLines = FALSE;
+}
+
 -(IBAction)selectObjFile:(id)sender
 {
     NSOpenPanel* panel = [NSOpenPanel openPanel];
@@ -121,16 +129,15 @@ The following files were used unmodified (license remains intact:
     // This method displays the panel and returns immediately.
     // The completion handler is called when the user selects an
     // item or cancels the panel.
-    [panel beginWithCompletionHandler:^(NSInteger result){
-        if (result == NSFileHandlingPanelOKButton) {
+    [panel beginWithCompletionHandler:^(NSInteger result)
+	{
+        if (result == NSFileHandlingPanelOKButton)
+		{
             NSURL*  theDoc = [[panel URLs] objectAtIndex:0];
-            
             // remember the obj path
             sObjPath = [[NSString alloc] initWithString:[theDoc path]];
-            
             [self loadObjFile];
         }
-        
     }];
 };
 
@@ -140,6 +147,7 @@ The following files were used unmodified (license remains intact:
     NSString *sFileName = [[NSString alloc] initWithFormat:@"%@.obj", sName];
     
 	// Stop vertex array processing
+	// If we don't, bad things happen when we reallocate the arrays
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);
 	if ([buttonLightingEnable indexOfSelectedItem] == 1)
@@ -147,8 +155,6 @@ The following files were used unmodified (license remains intact:
 
     meshParser = [[omvParser alloc] init];
     theMesh = [meshParser parseObjFile:[meshParser loadObjFile:sFileName FromBundle:true]];
-	// = [meshParser parseObjFile:[meshParser loadObjFile:@"cube.obj"]];
-	//theMesh = [meshParser parseObjFile:[meshParser loadObjFile:@"teapot.obj"]];
 	[self generateVertexArrays];
 	[self generateSurfaceNormals];
 
@@ -158,6 +164,15 @@ The following files were used unmodified (license remains intact:
 	if ([buttonLightingEnable indexOfSelectedItem] == 1)
 		glEnableClientState(GL_NORMAL_ARRAY);
 }
+
+-(void)loadObjFile
+{
+    meshParser = [[omvParser alloc] init];
+    theMesh = [meshParser parseObjFile:[meshParser loadObjFile:sObjPath FromBundle:false]];
+	[self generateVertexArrays];
+	[self generateSurfaceNormals];
+}
+
 //////////////////////////////////////////////////////////////////////
 #pragma mark  ==== Object Initialization ====
 //////////////////////////////////////////////////////////////////////
@@ -212,7 +227,7 @@ The following files were used unmodified (license remains intact:
 {
     showNormals = NO;
     showSurfaceNormals = NO;
-    
+    drawAxisLines = NO;
 	glGeometryType = GL_LINE_LOOP;
 	renderMode = renderWireframe;
     
@@ -253,15 +268,6 @@ The following files were used unmodified (license remains intact:
 	[meshControlWindow makeKeyAndOrderFront:self];
 }
 
--(void)loadObjFile
-{
-    meshParser = [[omvParser alloc] init];
-    theMesh = [meshParser parseObjFile:[meshParser loadObjFile:sObjPath FromBundle:false]];
-	// = [meshParser parseObjFile:[meshParser loadObjFile:@"cube.obj"]];
-	//theMesh = [meshParser parseObjFile:[meshParser loadObjFile:@"teapot.obj"]];
-	[self generateVertexArrays];
-	[self generateSurfaceNormals];
-}
 //////////////////////////////////////////////////////////////////////
 #pragma mark  ==== Rendering Functions ====
 //////////////////////////////////////////////////////////////////////
@@ -364,14 +370,9 @@ static void drawAxes(float length, Vector3D *origin)
 #else // Test code below - used to show points for each normal
 	int i = 0;
 	glBegin(GL_POINTS);
-	for (i = 0; i < normalCount; i++)
-	{
+	for (i = 0; i < normalCount*2; i++)
 		glVertex3d(normalArray[i].x, normalArray[i].y, normalArray[i].z);
-	}
 	glEnd();
-	//int ni[] = {0,1,2,3,4,5,6,7,8,9,10,11};
-	//glVertexPointer(3, GL_DOUBLE, 0, normalArray);
-	//glDrawElements(GL_POINTS, (int)normalCount, GL_UNSIGNED_INT, ni);
 #endif
 }
 
@@ -388,7 +389,8 @@ static void drawAxes(float length, Vector3D *origin)
 	// Clear color and depth buffers
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	// Draw the axes
-	//drawAxes(40.0, &origin);
+	if (drawAxisLines)
+		drawAxes(40.0, &origin);
 	// Set our vertex pointer to the vertex array
 	glVertexPointer(3, GL_DOUBLE, 0, vertexList);
 	// Set the color array
@@ -533,7 +535,6 @@ static void drawAxes(float length, Vector3D *origin)
 	// Generate a normal for each triangle
 	int i = 0, j = 0;
 	Vector3D *pV0, *pV1, *pV2;
-
 	Vector3D u, v, r;
 
 	if (normalArray)
@@ -546,8 +547,6 @@ static void drawAxes(float length, Vector3D *origin)
 	normalArray = malloc(triCount * sizeof(Vector3D));
 	normalVectorLines = malloc(2 * triCount * sizeof(Vector3D));
 	normalLineIndices  = malloc(2 * triCount * sizeof(int));
-
-	//Vector3D surfaceCoordinate;
 	
 	for (i = 0; i < triCount; i += 3)
 	{
@@ -573,7 +572,7 @@ static void drawAxes(float length, Vector3D *origin)
 
 		// The normal = normalized cross product of u and v
 		[self crossVector3D:&u otherVector:&v result:&r];
-		//[self normalizeVector:&r];
+		[self normalizeVector:&r];
 		
 		//NSLog(@"Normal = (%f : %f : %f)\n", rx, ry, rz);
 
@@ -611,27 +610,19 @@ static void drawAxes(float length, Vector3D *origin)
 
 - (double)magnitudeOfVector3:(Vector3D*) vec3
 {
-	// ABS is unnecessary - squared terms can never be negative and no subtraction
-	//	return abs(sqrt(pow(vec3->x, 2) + pow(vec3->y, 2) + pow(vec3->z, 2)));
 	return sqrt(pow(vec3->x, 2) + pow(vec3->y, 2) + pow(vec3->z, 2));
 }
 
 - (Vector3D*)normalizeVector:(Vector3D*) vec3
 {
 	double magnitude = [self magnitudeOfVector3:vec3];
-	//Vector3 normalized = new Vector3();
-	//magnitude = vec.X + vec.Y + vec.Z;
 	if (magnitude != 0.0f)
 	{
 		vec3->x /= magnitude;
 		vec3->y /= magnitude;
 		vec3->z /= magnitude;
-		//normalized.x = vec3->x/magnitude;
-		//normalized.y = vec3->y/magnitude;
-		//normalized.z = vec3->z/magnitude;
 	}
 	return vec3;
-	//return normalized;
 }
 //////////////////////////////////////////////////////////////////////
 #pragma mark  ==== Mouse Input Section ====
