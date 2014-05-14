@@ -547,7 +547,9 @@ static void drawAxes(float length, Vector3D *origin)
 	normalArray = malloc(triCount * sizeof(Vector3D));
 	normalVectorLines = malloc(2 * triCount * sizeof(Vector3D));
 	normalLineIndices  = malloc(2 * triCount * sizeof(int));
-	
+
+	//Vector3D surfaceCoordinate;
+
 	for (i = 0; i < triCount; i += 3)
 	{
 		// Get the vertices used by the current triangle
@@ -559,6 +561,11 @@ static void drawAxes(float length, Vector3D *origin)
 		//	  vertexIndices[i+0], pV0->x, pV0->y, pV0->z,
 		//	  vertexIndices[i+1], pV1->x, pV1->y, pV1->z,
 		//	  vertexIndices[i+2], pV2->x, pV2->y, pV2->z);
+
+		// Centroid formula (x,y,z) = (x1 + 2/3(x2-x1), y1 + 2/3(y2 - y1), z1 + 2/3(z2-z1))
+		//surfaceCoordinate.x = pV0->x + (pV1->x - pV0->x)*(2.0/3.0) + (pV2->x - pV1->x)*(2.0/3.0);
+		//surfaceCoordinate.y = pV0->y + (pV1->y - pV0->y)*(2.0/3.0) + (pV2->y - pV1->y)*(2.0/3.0);
+		//surfaceCoordinate.z = pV0->z + (pV1->z - pV0->z)*(2.0/3.0) + (pV2->z - pV1->z)*(2.0/3.0);
 		
 		// Per the formula on OpenGL.org
 		// (v1 - v0) * (v2 - v0)
@@ -585,9 +592,9 @@ static void drawAxes(float length, Vector3D *origin)
 		
 		// Add the normal line to lines array
 		normalLineIndices[j] = j;
-		normalVectorLines[j].x = normalArray[i].x;
-		normalVectorLines[j].y = normalArray[i].y;
-		normalVectorLines[j].z = normalArray[i].z;
+		normalVectorLines[j].x = normalArray[i].x; // surfaceCoordinate.x;
+		normalVectorLines[j].y = normalArray[i].y; // surfaceCoordinate.y;
+		normalVectorLines[j].z = normalArray[i].z; // surfaceCoordinate.z;
 
 		normalLineIndices[j+1] = j+1;
 		normalVectorLines[j+1].x   = 3*normalArray[i].x ; //surfaceCoordinate.x;
