@@ -32,7 +32,12 @@ The following files were used unmodified (license remains intact:
 -(BOOL)becomeFirstResponder		{ return YES; }
 -(BOOL)resignFirstResponder		{ return YES; }
 
-// Select the rendering mode
+
+/*
+ * Select the rendering mode
+ * Requirement 3.1.4
+ *
+ */
 -(IBAction)selectRenderMode:(id)sender
 {
     long mode = [sender indexOfSelectedItem];
@@ -51,7 +56,11 @@ The following files were used unmodified (license remains intact:
     }
 }
 
-// Enable or disable lighting
+/*
+ * Enable or disable lighting
+ * Requirement 3.1.2
+ *
+ */
 -(IBAction)selectLightEnable:(id)sender
 {
     //long lightingEnable = [[sender selectedItem] tag];
@@ -94,7 +103,11 @@ The following files were used unmodified (license remains intact:
 	}
 }
 
-// Select the shading model
+/*
+ * Select the shading model
+ * Requirement 3.1.3
+ *
+ */
 -(IBAction)selectShadeModel:(id)sender
 {
 	ShadeModel sm = (ShadeModel) [sender indexOfSelectedItem];
@@ -106,6 +119,11 @@ The following files were used unmodified (license remains intact:
 		glShadeModel(GL_SMOOTH);
 }
 
+/*
+ * Enable or disable the drawing of surface normals
+ * Requirement 3.1.5
+ *
+ */
 -(IBAction)selectShowSurfaceNormals:(id)sender
 {
 	if ([sender state])
@@ -122,6 +140,11 @@ The following files were used unmodified (license remains intact:
 		drawAxisLines = FALSE;
 }
 
+/*
+ * Select a obj file available to the computer
+ * Requirement 3.1.1
+ *
+ */
 -(IBAction)selectObjFile:(id)sender
 {
     NSOpenPanel* panel = [NSOpenPanel openPanel];
@@ -141,6 +164,11 @@ The following files were used unmodified (license remains intact:
     }];
 };
 
+/*
+ * Loaded a sample obj file
+ * Requirement 3.1.8
+ *
+ */
 -(IBAction)selectPopUpObj:(id)sender
 {
     NSString *sName = [[sender itemAtIndex:[sender indexOfSelectedItem]] title];
@@ -654,7 +682,7 @@ static void drawAxes(float length, Vector3D *origin)
 	}
 }
 
-// rightMouse is the panning function
+
 - (void)rightMouseDown:(NSEvent *)theEvent
 {
 	NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
@@ -706,6 +734,11 @@ static void drawAxes(float length, Vector3D *origin)
 	}
 }
 
+/*
+ * rotate the 3D model
+ * Requirement 3.1.6
+ *
+ */
 - (void)mouseDragged:(NSEvent *)theEvent
 {
 	NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
@@ -721,6 +754,11 @@ static void drawAxes(float length, Vector3D *origin)
 		[self mousePan: location];
 }
 
+/*
+ * mouse function to zoom in and out on the 3D model
+ * Requirement 3.1.7
+ *
+ */
 - (void)scrollWheel:(NSEvent *)theEvent
 {
 	float wheelDelta = [theEvent deltaX] +[theEvent deltaY] + [theEvent deltaZ];

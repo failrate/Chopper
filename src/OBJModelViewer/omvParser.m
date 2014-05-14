@@ -8,6 +8,11 @@
 
 #import "omvParser.h"
 
+/*
+ * Class used to parse information in OBJ file into omvMesh Object
+ * Requirement 3.2.1 and 3.2.2
+ *
+ */
 @implementation omvParser
 
 @synthesize csCurrentMaterialName, cbCurrentSmoothing, cobjCurrentObj, cobjMesh;
@@ -23,25 +28,28 @@
     
     return self;
 }
-
+// not used implement if textures needed
 -(NSString*)parseName: (NSMutableArray*) sTokens
 {
     NSString *sReturn;
     
     return sReturn;
 }
+// not used implement if textures needed
 -(NSString*)parseMaterialLibrary: (NSMutableArray*) sTokens
 {
     NSString *sReturn;
     
     return sReturn;
 }
+// not used implement if textures needed
 -(NSString*)parseObjectName: (NSMutableArray*) sTokens
 {
     NSString *sReturn;
     
     return sReturn;
 }
+// parse vector 3 information from line of text from obj file
 -(Vector3*)parseVector3: (NSArray*) sTokens
 {
     Vector3 *v3Return = [[Vector3 alloc] init];
@@ -57,7 +65,7 @@
     
     return v3Return;
 }
-
+// parse boolean information from line of text from obj file
 -(bool)parseBool: (NSArray*) sTokens
 {
     NSString *sValue = [sTokens objectAtIndex:1];
@@ -69,6 +77,7 @@
         return false;
 }
 
+// parse face information from line of text from obj file
 -(NSMutableArray*)parseFaceIndices: (NSArray*) sTokens
 {
     int i, j, k, iCount;
@@ -77,6 +86,7 @@
     NSMutableArray *aryTemp;
     NSMutableArray *aryTemp2;
     
+    // the face has three items
     for(i=0; i < 3; i++)
     {
         aryTemp = [[NSMutableArray alloc] init];
@@ -86,6 +96,7 @@
     iCount = 0;
     bFirst = true;
     
+    // loop through each face item
     for(j=0; j<sTokens.count; j++)
     {
         if(bFirst)
@@ -94,9 +105,12 @@
             continue;
         }
         
+        // get the string at the index specified
         NSString *sTemp =[sTokens objectAtIndex:j];
+        // divide the string if if delimitr / is present
         NSArray *arySubTokens = [sTemp componentsSeparatedByString:@"/"];
         
+        // loop through and add the individual face information
         for(k=0; k<arySubTokens.count; k++)
         {
             aryTemp2 = [aryReturn objectAtIndex:iCount];
@@ -110,15 +124,17 @@
     return aryReturn;
 }
 
+// check that the current object is not null
 -(void)ensureCurrentObject
 {
     if(cobjCurrentObj == nil)
     {
+        // create a default current object if it is null
         self.cobjCurrentObj = [self.cobjMesh addObject:@"default"];
         
     }
 }
-
+// function to parse the contents of the obj file that has been read into memory
 -(omvMesh*)parseObjFile:(NSArray*) arysLines
 {
     self.cobjMesh = [[omvMesh alloc] init];
@@ -223,22 +239,27 @@
     return cobjMesh;
 }
 
+// load the obj file and read its contents
 -(NSArray*)loadObjFile:(NSString*) sFileName FromBundle:(BOOL)bBundle
 {
     NSArray *aryReturn;
     NSString *sFileContents;
 
+    // check if loading a sample obj file
     if(bBundle)
     {
+        // loading a sample obj file included in the bundle
         NSMutableString *filePath = [NSMutableString stringWithString:[[NSBundle mainBundle] pathForResource:[sFileName stringByDeletingPathExtension] ofType:[sFileName pathExtension]]];
         
         sFileContents = [NSString stringWithContentsOfFile:filePath encoding:NSASCIIStringEncoding error:NULL];
     }
     else
     {
+        // user has elected to load a custom obj file
         sFileContents = [NSString stringWithContentsOfFile:sFileName encoding:NSASCIIStringEncoding error:NULL];
     }
 	
+    // return the contents of the read file
     aryReturn = [sFileContents componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
     
     return aryReturn;

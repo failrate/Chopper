@@ -8,6 +8,7 @@
 
 #import "omvMesh.h"
 
+// vector class of length 2 x and y
 @implementation Vector2 : NSObject
 
 @synthesize cfX, cfY;
@@ -21,6 +22,7 @@
 
 @end
 
+// vector class of length 3 x, y and z
 @implementation Vector3 : NSObject
 
 @synthesize cfX, cfY, cfZ;
@@ -37,6 +39,8 @@
 -(float)z	{ return cfZ; }
 
 @end
+
+// stores the face information retrieved from the OBJ file
 
 @implementation omvFace
 
@@ -56,6 +60,7 @@
 
 @end
 
+// stores the group information from the oBJ file
 @implementation omvGroup
 
 @synthesize csName, caryFaces, caryv3TextCoord, caryv3NormalIndices;
@@ -72,6 +77,7 @@
 
 @end
 
+// storese the completely OBJ file and its various data structure
 @implementation omvObject
 
 @synthesize csName, caryv3Vertices, caryGroups, cobjGroupCurrent;
@@ -87,25 +93,28 @@
     return self;
 }
 
-//
+// add a vertex to the array of vertices
 -(void)addVertex: (Vector3*)aryv3Coord
 {
     // add vertex vector 3
     [self.caryv3Vertices addObject:aryv3Coord];
 }
 
+// add a texture to the array of textures
 -(void)addTextureCoord: (Vector3*)aryv3Coord
 {
     // add texture vector 3
     [self.cobjGroupCurrent.caryv3TextCoord addObject:aryv3Coord];
 }
 
+// add a normal vector to the array of  normal indicies
 -(void)addNormalCoord: (Vector3*)aryv3Coord
 {
     // add normal vector 3
     [self.cobjGroupCurrent.caryv3NormalIndices addObject:aryv3Coord];
 }
 
+// create a face structure and add it to the arry of faces
 -(void)addFace: (NSMutableArray*)aryintVertexIndices Texture: (NSMutableArray*)aryintTextIndices Normal: (NSMutableArray*)aryintNormalIndices Smoothing: (BOOL)bUseSmoothing Material: (NSString*)sMaterialName
 {
     // create face object
@@ -122,14 +131,17 @@
     [self.cobjGroupCurrent.caryFaces addObject:cFace];
 }
 
+// check that the current group has bee initialized
 -(void)ensureCurrentGroup
 {
     if(self.cobjGroupCurrent == NULL)
     {
+        // current group is null create a default group and add it
         [self addGroup:@"default"];
     }
 }
 
+// returns the faces as an array  or triangles
 -(NSMutableArray*)getFacesAsTriangles:(BOOL)sharedVertices
 {
     int iTemp, i, j;
@@ -138,18 +150,23 @@
     NSNumber *iNum;
     omvGroup *grpTemp;
     
+    // loop through all the groups in the object structure
     for(j=0; j<self.caryGroups.count; j++)
     {
+        // get the object
         grpTemp = [self.caryGroups objectAtIndex:j];
         
+        // loop through all the faces
         for(i=0; i<grpTemp.caryFaces.count; i++)
         {
             faceTemp = [grpTemp.caryFaces objectAtIndex:i];
             
+            // check if the vertices are shared
 			if (sharedVertices)
 			{
 				if (faceTemp.caryintVertexIndices.count == 4) 
 				{
+                    // compute the triangles for the face
 					iNum = [NSNumber numberWithInt:[[faceTemp.caryintVertexIndices objectAtIndex:0] intValue]-1];
 					[aryTriangles addObject:iNum];
 					iNum = [NSNumber numberWithInt:[[faceTemp.caryintVertexIndices objectAtIndex:1] intValue]-1];
@@ -157,6 +174,7 @@
 					iNum = [NSNumber numberWithInt:[[faceTemp.caryintVertexIndices objectAtIndex:2] intValue]-1];
 					[aryTriangles addObject:iNum];
 					
+                    // compute the triangles for the face
 					iNum = [NSNumber numberWithInt:[[faceTemp.caryintVertexIndices objectAtIndex:2] intValue]-1];
 					[aryTriangles addObject:iNum];
 					iNum = [NSNumber numberWithInt:[[faceTemp.caryintVertexIndices objectAtIndex:3] intValue]-1];
@@ -228,6 +246,8 @@
     return aryTriangles;
 }
 
+
+// code is needed if texture is required
 -(NSMutableArray*)getUVS
 {
     NSMutableArray *aryv2UVS = [[NSMutableArray alloc] init];
@@ -249,6 +269,7 @@
     return aryv2UVS;
 }
 
+// add a group to the ojbect
 -(void)addGroup: (NSString*)sName
 {
     omvGroup *objGroup = [[omvGroup alloc] init];
@@ -259,6 +280,12 @@
 }
 @end
 
+/*
+* Class used to store all data for loaded OBJ files
+* Requirement 3.2.1 and 3.2.2
+*
+*/
+// mesh that has an array of objects and material libraries
 @implementation omvMesh
 
 @synthesize caryObjects, carystrMaterialLibraries;
@@ -272,6 +299,7 @@
     return self;
 }
 
+// add an object to the mesh
 -(omvObject*)addObject: (NSString*)name
 {
     omvObject *objReturn = [[omvObject alloc] init];
